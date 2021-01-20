@@ -1,0 +1,31 @@
+description: >
+  Generates a set of pipeline parameters from `mapping` at
+  `output-path`.
+
+parameters:
+  base-revision:
+    type: string
+    default: "master"
+    description: >
+      The revision to compare the current one against for the purpose
+      of determining changed files.
+  mapping:
+    type: string
+    default: ""
+    description: >
+      Mapping of path regular expressions to pipeline parameters and
+      values. One mapping per line, whitespace-delimited.
+  output-path:
+    type: string
+    default: "/tmp/pipeline-parameters.json"
+    description: >
+      Path to save the generated parameters to.
+
+steps:
+  - run:
+      environment:
+        BASE_REVISION: << parameters.base-revision >>
+        MAPPING: << parameters.mapping >>
+        OUTPUT_PATH: << parameters.output-path >>
+      name: Hello Greeting
+      command: <<include(scripts/create-parameters.sh)>>

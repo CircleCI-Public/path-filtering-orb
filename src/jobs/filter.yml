@@ -1,0 +1,33 @@
+description: >
+  Continues a pipeline in the `setup` state based with static config
+  and a set of pipeline parameters based on the changes in this push.
+
+executor: default
+
+parameters:
+  base-revision:
+    type: string
+    default: "master"
+    description: >
+      The revision to compare the current one against for the purpose
+      of determining changed files.
+  mapping:
+    type: string
+    default: ""
+    description: >
+      Mapping of path regular expressions to pipeline parameters and
+      values. One mapping per line, whitespace-delimited.
+  config-path:
+    type: string
+    default: ".circleci/continue_config.yml"
+    description: >
+      The location of the config to continue the pipeline with.
+
+steps:
+  - checkout
+  - set-parameters:
+      base-revision: << parameters.base-revision >>
+      mapping: << parameters.mapping >>
+  - continuation/continuation:
+      configuration_path: << parameters.config-path >>
+      parameters: "/tmp/pipeline-parameters.json"
