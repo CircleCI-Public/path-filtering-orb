@@ -28,6 +28,6 @@ steps:
   - set-parameters:
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>
-  - continuation/continuation:
+  - continuation/continue:
       configuration_path: << parameters.config-path >>
       parameters: "/tmp/pipeline-parameters.json"
