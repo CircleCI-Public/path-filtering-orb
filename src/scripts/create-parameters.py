@@ -12,11 +12,7 @@ changes = subprocess.run(
   check=True,
   capture_output=True
 ).stdout.splitlines()
-mappings = []
-
-with open(os.environ.get('MAPPING'), 'r') as fp:
-  for line in fp.readlines():
-    mappings.append(line.split())
+mappings = os.environ.get('MAPPING').splitlines()
 
 def check_mapping(m):
   if 3 != len(m):
