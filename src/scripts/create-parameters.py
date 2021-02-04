@@ -11,7 +11,7 @@ changes = subprocess.run(
    os.environ.get('BASE_REVISION'), 'HEAD'],
   check=True,
   capture_output=True
-).stdout.splitlines()
+).stdout.decode('utf-8').splitlines()
 mappings = [
   m.split() for m in
   os.environ.get('MAPPING').splitlines()
