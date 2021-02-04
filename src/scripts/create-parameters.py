@@ -28,7 +28,7 @@ def check_mapping(m):
   return False
 
 def convert_mapping(m):
-  return [m[1], m[2]]
+  return [m[1], json.loads(m[2])]
 
 mappings = filter(check_mapping, mappings)
 mappings = map(convert_mapping, mappings)
