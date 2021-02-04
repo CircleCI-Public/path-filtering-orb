@@ -28,4 +28,4 @@ steps:
         MAPPING: << parameters.mapping >>
         OUTPUT_PATH: << parameters.output-path >>
       name: Hello Greeting
-      command: <<include(scripts/create-parameters.sh)>>
+      command: <<include(scripts/create-parameters.py)>>

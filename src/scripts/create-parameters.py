@@ -1,13 +1,17 @@
-CHANGED_FILES=$(git diff --name-only "$BASE_REVISION" HEAD)
-export CHANGED_FILES
+#!/usr/bin/env python3
 
-python - <<EOF
 import json
 import os
 import re
+import subprocess
 
 output_path = os.environ.get('OUTPUT_PATH')
-changes = os.environ.get('CHANGED_FILES')
+changes = subprocess.run(
+  ['git', 'diff', '--name-only',
+   os.environ.get('BASE_REVISION'), 'HEAD'],
+  check=True,
+  capture_output=True
+).stdout.splitlines()
 mappings = []
 
 with open(os.environ.get('MAPPING'), 'r') as fp:
@@ -33,4 +37,4 @@ mappings = dict(mappings)
 
 with open(output_path, 'w') as fp:
   fp.write(json.dumps(mappings))
-EOF
+
