@@ -1,13 +1,17 @@
 description: >
-  Sample example description.
-# Provide a use-case based example for using this orb.
-# Everything in the `usage` section will be displayed in the orb registry.
-# Comments are not retained.
+  Continue a pipeline from the setup phase with supplied configuation
+  and pipeline parameters generated from the files changed.
 usage:
   version: 2.1
+  setup: true
   orbs:
-    <orb-name>: <namespace>/<orb-name>@1.2.3
+    path-filtering: sandbox/path-filtering@0.0.1
   workflows:
-    use-my-orb:
+    generate-config:
       jobs:
-        - <orb-name>/<job-name>
+        - path-filtering/filter:
+            base-revision: master
+            config-path: .circleci/continue-config.yml
+            mapping: |
+              ^src/.* build-code true
+              ^doc/.* build-docs true
