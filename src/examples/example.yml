@@ -13,5 +13,5 @@ usage:
             base-revision: master
             config-path: .circleci/continue-config.yml
             mapping: |
-              ^src/.* build-code true
-              ^doc/.* build-docs true
+              src/.* build-code true
+              doc/.* build-docs true

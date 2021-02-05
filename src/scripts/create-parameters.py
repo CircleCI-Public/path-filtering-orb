@@ -21,7 +21,7 @@ def check_mapping(m):
   if 3 != len(m):
     raise Exception("Invalid mapping")
   path, param, value = m
-  regex = re.compile(path)
+  regex = re.compile(r'^' + path + r'$')
   for change in changes:
     if regex.match(change):
       return True
