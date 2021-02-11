@@ -7,4 +7,4 @@ display:
   source_url: "https://github.com/CircleCI-Public/path-filtering-orb"
 
 orbs:
-  continuation: sandbox/continuation@0.0.2
+  continuation: sandbox/continuation@0.0.3
