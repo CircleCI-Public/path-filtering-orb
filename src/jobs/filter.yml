@@ -7,7 +7,7 @@ executor: default
 parameters:
   base-revision:
     type: string
-    default: "master"
+    default: "main"
     description: >
       The revision to compare the current one against for the purpose
       of determining changed files.
