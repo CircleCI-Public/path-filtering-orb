@@ -6,9 +6,15 @@ import re
 import subprocess
 
 output_path = os.environ.get('OUTPUT_PATH')
+common_ancestor = subprocess.run(
+  ['git', 'merge-base',
+   os.environ.get('BASE_REVISION'), 'HEAD'],
+  check=True,
+  capture_output=True
+).stdout.decode('utf-8').strip()
 changes = subprocess.run(
   ['git', 'diff', '--name-only',
-   os.environ.get('BASE_REVISION'), 'HEAD'],
+   common_ancestor, 'HEAD'],
   check=True,
   capture_output=True
 ).stdout.decode('utf-8').splitlines()
