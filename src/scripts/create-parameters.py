@@ -18,6 +18,7 @@ if head == base:
     check=True,
     capture_output=True
   ).stdout.decode('utf-8').strip()
+print('Comparing {}...{}'.format(base, head))
 changes = subprocess.run(
   ['git', 'diff', '--name-only', base, head],
   check=True,
