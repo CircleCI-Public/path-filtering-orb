@@ -12,18 +12,32 @@ base = subprocess.run(
   check=True,
   capture_output=True
 ).stdout.decode('utf-8').strip()
+
 if head == base:
-  base = subprocess.run(
-    ['git', 'rev-parse', 'HEAD~1'],
-    check=True,
-    capture_output=True
-  ).stdout.decode('utf-8').strip()
+  try:
+    # If building on the same branch as BASE_REVISION, we will get the
+    # current commit as merge base. In that case try to go back to the
+    # first parent, i.e. the last state of this branch before the
+    # merge, and use that as the base.
+    base = subprocess.run(
+      ['git', 'rev-parse', 'HEAD~1'], # FIXME this breaks on the first commit, fallback to something
+      check=True,
+      capture_output=True
+    ).stdout.decode('utf-8').strip()
+  except:
+    # This can fail if this is the first commit of the repo, so that
+    # HEAD~1 actually doesn't resolve. In this case we can compare
+    # against this magic SHA below, which is the empty tree. The diff
+    # to that is just the first commit as patch.
+    base = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+
 print('Comparing {}...{}'.format(base, head))
 changes = subprocess.run(
   ['git', 'diff', '--name-only', base, head],
   check=True,
   capture_output=True
 ).stdout.decode('utf-8').splitlines()
+
 mappings = [
   m.split() for m in
   os.environ.get('MAPPING').splitlines()
