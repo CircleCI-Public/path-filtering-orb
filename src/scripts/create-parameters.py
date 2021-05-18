@@ -43,7 +43,6 @@ mappings = [
   os.environ.get('MAPPING').splitlines()
 ]
 
-
 def check_mapping(m):
   if 3 != len(m):
     raise Exception("Invalid mapping")
@@ -55,7 +54,6 @@ def check_mapping(m):
     if regex.match(change):
       return True
   return False
-
 
 def convert_mapping(m):
   return [m[1], json.loads(m[2])]
