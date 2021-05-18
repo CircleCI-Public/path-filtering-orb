@@ -42,6 +42,8 @@ def changed_files(base, head):
 def check_mapping(changes, m):
   if 3 != len(m):
     raise Exception("Invalid mapping")
+  if m[1] == 'run-tag':
+    return True
   path, _param, _value = m
   regex = re.compile(r'^' + path + r'$')
   for change in changes:
