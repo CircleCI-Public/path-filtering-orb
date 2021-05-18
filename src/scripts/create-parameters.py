@@ -58,7 +58,7 @@ mappings = [m.split() for m in os.environ.get("MAPPING").splitlines()]
 def check_mapping(m):
     if 3 != len(m):
         raise Exception("Invalid mapping")
-    elif m[1] == 'run-tag':
+    if m[1] == 'run-tag':
         return True
     path, param, value = m
     regex = re.compile(r"^" + path + r"$")
@@ -75,6 +75,8 @@ def convert_mapping(m):
 mappings = filter(check_mapping, mappings)
 mappings = map(convert_mapping, mappings)
 mappings = dict(mappings)
+
+print(mappings)
 
 with open(output_path, "w") as fp:
     fp.write(json.dumps(mappings))
