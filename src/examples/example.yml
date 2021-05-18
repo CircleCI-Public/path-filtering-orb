@@ -5,7 +5,7 @@ usage:
   version: 2.1
   setup: true
   orbs:
-    path-filtering: uplight/path-filtering@0.0.1
+    path-filtering: circleci/path-filtering@0.0.1
   workflows:
     generate-config:
       jobs:
