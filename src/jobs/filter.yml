@@ -22,12 +22,16 @@ parameters:
     default: ".circleci/continue_config.yml"
     description: >
       The location of the config to continue the pipeline with.
+  output-path:
+    type: string
+    default: "/tmp/pipeline-parameters.json"
 
 steps:
   - checkout
   - set-parameters:
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>
+      output-path: << parameters.output-path >>
   - continuation/continue:
       configuration_path: << parameters.config-path >>
-      parameters: "/tmp/pipeline-parameters.json"
+      parameters: << parameters.output-path >>
