@@ -26,8 +26,19 @@ parameters:
     type: string
     description: "The domain of the CircleCI installation - defaults to circleci.com. (Only necessary for CircleCI Server users)"
     default: "circleci.com"
+  workspace_path:
+    type: string
+    description: "Path to attach the workspace to"
+    default: ""
 
 steps:
+  - when:
+      condition:
+        not:
+          equal: [ "", << parameters.workspace_path >> ]
+      steps:
+        - attach_workspace:
+            at: << parameters.workspace_path >>
   - checkout
   - set-parameters:
       base-revision: << parameters.base-revision >>
