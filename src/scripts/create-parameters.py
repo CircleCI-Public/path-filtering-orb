@@ -46,6 +46,8 @@ mappings = [
 def check_mapping(m):
   if 3 != len(m):
     raise Exception("Invalid mapping")
+  if m[1] == 'run-tag':
+    return True
   path, param, value = m
   regex = re.compile(r'^' + path + r'$')
   for change in changes:
@@ -62,4 +64,3 @@ mappings = dict(mappings)
 
 with open(output_path, 'w') as fp:
   fp.write(json.dumps(mappings))
-
