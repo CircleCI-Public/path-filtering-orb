@@ -38,10 +38,7 @@ changes = subprocess.run(
   capture_output=True
 ).stdout.decode('utf-8').splitlines()
 
-mappings = [
-  m.split() for m in
-  os.environ.get('MAPPING').splitlines()
-]
+mappings = [m.split() for m in os.environ.get("MAPPING").splitlines() if m.strip()]
 
 def check_mapping(m):
   if 3 != len(m):
