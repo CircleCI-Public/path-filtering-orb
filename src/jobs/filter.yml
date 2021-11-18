@@ -19,9 +19,9 @@ parameters:
     description: >
       Mapping of path regular expressions to pipeline parameters and
       values. One mapping per line, whitespace-delimited.
-  config-path:
+  output-path:
     type: string
-    default: ".circleci/continue_config.yml"
+    default: "/tmp/pipeline-continuation.yml"
     description: >
       The location of the config to continue the pipeline with.
   circleci_domain:
@@ -46,10 +46,13 @@ steps:
         - attach_workspace:
             at: << parameters.workspace_path >>
   - checkout
+  - run:
+      name: Install yq
+      command: pip install yq
   - set-parameters:
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>
+      output-path: << parameters.output-path >>
   - continuation/continue:
-      configuration_path: << parameters.config-path >>
-      parameters: "/tmp/pipeline-parameters.json"
+      configuration_path: << parameters.output-path >>
       circleci_domain: << parameters.circleci_domain >>

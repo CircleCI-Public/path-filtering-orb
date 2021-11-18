@@ -17,9 +17,9 @@ parameters:
       values. One mapping per line, whitespace-delimited.
   output-path:
     type: string
-    default: "/tmp/pipeline-parameters.json"
+    default: "/tmp/pipeline-continuation.yml"
     description: >
-      Path to save the generated parameters to.
+      Path to save the generated continuation config to.
 
 steps:
   - run:

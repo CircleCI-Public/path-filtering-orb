@@ -1,10 +1,10 @@
 version: 2.1
 
 description: >
-  Continue a pipeline based on paths of changed files.
+  Merge mutiple yaml configuration files and continue a pipeline based on paths of changed files.
 display:
-  home_url: "https://github.com/CircleCI-Public/path-filtering-orb"
-  source_url: "https://github.com/CircleCI-Public/path-filtering-orb"
+  home_url: "https://github.com/emoriarty/path-filtering-orb"
+  source_url: "https://github.com/emoriarty/path-filtering-orb"
 
 orbs:
   continuation: circleci/continuation@0.2.0

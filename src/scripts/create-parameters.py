@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import json
 import os
 import re
 import subprocess
@@ -44,22 +43,34 @@ mappings = [
 ]
 
 def check_mapping(m):
-  if 3 != len(m):
+  if 2 > len(m):
     raise Exception("Invalid mapping")
-  path, param, value = m
-  regex = re.compile(r'^' + path + r'$')
+  pattern, paths = m
+  regex = re.compile(r'^' + pattern + r'$')
   for change in changes:
     if regex.match(change):
       return True
   return False
 
-def convert_mapping(m):
-  return [m[1], json.loads(m[2])]
+def get_paths(m):
+  return m[1:len(m)]
+
+def flatten_paths(t):
+    return [item for sublist in t for item in sublist]
 
 mappings = filter(check_mapping, mappings)
-mappings = map(convert_mapping, mappings)
-mappings = dict(mappings)
+mappings = map(get_paths, mappings)
+paths = list(set(flatten_paths(mappings)))
 
-with open(output_path, 'w') as fp:
-  fp.write(json.dumps(mappings))
+if 0 == len(paths):
+  print('No YAML configs to merge.')
 
+  halt_process = subprocess.run(["circleci-agent", "step",  "halt"])
+else:
+  print('YAML files to merge: ', paths)
+  print(*paths, sep='\n')
+
+  merge_yaml_process = subprocess.run(["xargs", paths, "yq", "-y", "-s", "reduce .[] as $item ({}; . * $item)"], capture_output=True)
+
+  with open(output_path, 'w') as fp:
+    fp.write(merge_yaml_process.stdout.decode('utf-8'))
