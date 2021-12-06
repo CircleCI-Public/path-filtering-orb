@@ -5,10 +5,26 @@ import os
 import re
 import subprocess
 
+def checkout(revision):
+  """
+  Helper function for checking out a branch
+
+  :param revision: The revision to checkout
+  :type revision: str
+  """
+  subprocess.run(
+    ['git', 'checkout', revision],
+    check=True
+  )
+
 output_path = os.environ.get('OUTPUT_PATH')
 head = os.environ.get('CIRCLE_SHA1')
+base_revision = os.environ.get('BASE_REVISION')
+checkout(base_revision)  # Checkout base revision to make sure it is available for comparison
+checkout(head)  # return to head commit
+
 base = subprocess.run(
-  ['git', 'merge-base', os.environ.get('BASE_REVISION'), head],
+  ['git', 'merge-base', base_revision, head],
   check=True,
   capture_output=True
 ).stdout.decode('utf-8').strip()
