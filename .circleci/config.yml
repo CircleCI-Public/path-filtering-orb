@@ -24,10 +24,14 @@ jobs:
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
   integration-test-1:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/python:3.10
     steps:
       - checkout
-      # TODO This.
+      - run:
+          name: Run unittests
+          working_directory: src
+          command: |
+            python -m unittest tests.test_create_parameters
 
 workflows:
   # Prior to producing a development orb (which requires credentials) basic validation, linting, and even unit testing can be performed.

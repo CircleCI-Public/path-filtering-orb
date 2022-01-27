@@ -29,4 +29,4 @@ steps:
         OUTPUT_PATH: << parameters.output-path >>
       name: Set parameters
       shell: /usr/bin/env python3
-      command: <<include(scripts/create-parameters.py)>>
+      command: <<include(scripts/create_parameters.py)>>
