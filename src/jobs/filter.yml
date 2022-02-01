@@ -47,9 +47,14 @@ steps:
         - attach_workspace:
             at: << parameters.workspace_path >>
   - checkout
-  - set-parameters:
-      base-revision: << parameters.base-revision >>
-      mapping: << parameters.mapping >>
+  - run:
+      environment:
+        BASE_REVISION: << parameters.base-revision >>
+        MAPPING: << parameters.mapping >>
+        OUTPUT_PATH: /tmp/pipeline-parameters.json
+      name: Set parameters
+      shell: /usr/bin/env python3
+      command: <<include(scripts/create_parameters.py)>>
   - continuation/continue:
       configuration_path: << parameters.config-path >>
       parameters: "/tmp/pipeline-parameters.json"
