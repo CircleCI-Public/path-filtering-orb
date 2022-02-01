@@ -1,0 +1,27 @@
+version: 2.1
+
+parameters:
+  dev-orb-version:
+    type: string
+    default: ''
+  run-integration-tests:
+    type: boolean
+    default: false
+  changes:
+    type: boolean
+    default: false
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - when:
+          condition: << pipeline.parameters.changes >>
+          steps:
+            - run: echo changes
+      - when:
+          condition:
+            not: << pipeline.parameters.changes >>
+          steps:
+            - run: echo no changes
