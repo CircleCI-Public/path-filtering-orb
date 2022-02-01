@@ -3,7 +3,7 @@ version: 2.1
 description: >
   Continue a pipeline based on paths of changed files.
 display:
-  home_url: "https://github.com/CircleCI-Public/path-filtering-orb"
+  home_url: "https://circleci.com/docs/2.0/dynamic-config/"
   source_url: "https://github.com/CircleCI-Public/path-filtering-orb"
 
 orbs:

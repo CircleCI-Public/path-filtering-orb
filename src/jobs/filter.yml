@@ -2,6 +2,16 @@ description: >
   Continues a pipeline in the `setup` state based with static config
   and a set of pipeline parameters based on the changes in this push.
 
+  The mapping should be a set of items like so:
+  <path regular expression> <pipeline parameter> <value>
+
+  Multiple mappings can be supplied on separate lines.
+
+  If the regular expression matches any file changed between HEAD and
+  the base revision, the pipeline parameter will be set to the
+  supplied value for the setup workflow continuation. This way the
+  continuation config can be filtered to only perform relevant tasks.
+
 docker:
   - image: 'cimg/python:3.8'
 
