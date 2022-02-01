@@ -2,7 +2,8 @@ description: >
   Continues a pipeline in the `setup` state based with static config
   and a set of pipeline parameters based on the changes in this push.
 
-executor: default
+docker:
+  - image: 'cimg/python:3.8'
 
 resource_class: << parameters.resource_class >>
 
