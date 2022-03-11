@@ -1,5 +1,5 @@
 description: >
-  Continue a pipeline from the setup phase with supplied configuation
+  Continue a pipeline from the setup phase with supplied configuration
   and pipeline parameters generated from the files changed.
 usage:
   version: 2.1

@@ -1,6 +1,6 @@
 # tests/
 
-This is where your testing scripts for whichever language is embeded in your orb live, which can be executed locally and within a CircleCI pipeline prior to publishing.
+This is where your testing scripts for whichever language is embedded in your orb live, which can be executed locally and within a CircleCI pipeline prior to publishing.
 
 # Testing Orbs
 
