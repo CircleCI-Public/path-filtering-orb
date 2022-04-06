@@ -3,6 +3,7 @@ description: >
 
 docker:
   - image: 'cimg/python:<<parameters.tag>>'
+resource_class: << parameters.resource_class >>
 
 parameters:
   tag:
@@ -11,3 +12,7 @@ parameters:
     description: >
       Pick a specific circleci/python image variant:
       https://hub.docker.com/r/cimg/python/tags
+  resource_class:
+    description: Specify the resource class for Docker Executor
+    type: string
+    default: "small"
