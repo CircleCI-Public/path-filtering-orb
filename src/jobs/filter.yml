@@ -2,7 +2,9 @@ description: >
   Continues a pipeline in the `setup` state based with static config
   and a set of pipeline parameters based on the changes in this push.
 
-executor: default
+executor:
+  name: default
+  tag: << parameters.python_tag >>
 
 resource_class: << parameters.resource_class >>
 
@@ -36,6 +38,11 @@ parameters:
     type: string
     description: "Resource class to use"
     default: "small"
+  python_tag:
+    type: string
+    description: >
+      "Python image tag from: https://hub.docker.com/r/cimg/python/tags"
+    default: "3.8"
 
 steps:
   - checkout
