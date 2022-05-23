@@ -33,8 +33,9 @@ parameters:
     description: "Path to attach the workspace to"
     default: ""
   resource_class:
-    type: string
+    type: enum
     description: "Resource class to use"
+    enum: ["small", "medium", "medium+", "large", "xlarge", "2xlarge", "2xlarge+"]
     default: "small"
 
 steps:

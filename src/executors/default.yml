@@ -14,5 +14,6 @@ parameters:
       https://hub.docker.com/r/cimg/python/tags
   resource_class:
     description: Specify the resource class for Docker Executor
-    type: string
+    type: enum
+    enum: ["small", "medium", "medium+", "large", "xlarge", "2xlarge", "2xlarge+"]
     default: "small"
