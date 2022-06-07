@@ -5,7 +5,9 @@ description: >
 orbs: 
   git: guitarrapc/git-shallow-clone@2.4.0
 
-executor: default
+executor:
+  name: default
+  tag: << parameters.tag >>
 
 resource_class: << parameters.resource_class >>
 
@@ -39,6 +41,12 @@ parameters:
     type: string
     description: "Resource class to use"
     default: "small"
+  tag:
+    type: string
+    default: "3.8"
+    description: >
+      Pick a specific circleci/python image variant:
+      https://hub.docker.com/r/cimg/python/tags
   enable_shallow_checkout:
     type: boolean
     description: "Flag value for whether shallow checkout is used or not"
@@ -69,7 +77,7 @@ steps:
   - when:
       condition:
         not:
-          equal: [ "", << parameters.workspace_path >> ]
+          equal: ["", << parameters.workspace_path >>]
       steps:
         - attach_workspace:
             at: << parameters.workspace_path >>
