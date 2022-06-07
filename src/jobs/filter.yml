@@ -2,6 +2,9 @@ description: >
   Continues a pipeline in the `setup` state based with static config
   and a set of pipeline parameters based on the changes in this push.
 
+orbs: 
+  shallow-checkout: expo/shallow-checkout@1.0.2
+
 executor: default
 
 resource_class: << parameters.resource_class >>
@@ -36,9 +39,33 @@ parameters:
     type: string
     description: "Resource class to use"
     default: "small"
+  enable_shallow_checkout:
+    type: boolean
+    description: "Flag value for whether shallow checkout is used or not"
+    default: false
+  checkout_shallow_depth:
+    type: string
+    description: "Flag value for shallow checkout depth"
+    default: "100"
+  checkout_shallow_fetch_depth:
+    type: string
+    description: "Flag value for shallow checkout fetch depth"
+    default: "100"
 
 steps:
-  - checkout
+  - when:
+      condition:
+        not:
+          equal: [ "", << parameters.enable_shallow_checkout >> ]
+      steps:
+        - checkout
+  - when:
+      condition:
+          equal: [ "", << parameters.enable_shallow_checkout >> ]
+      steps:
+        - git/checkout_shallow:
+            depth: [ "1", << parameters.checkout_shallow_depth >> ]
+            fetch_depth: [ "1", << parameters.checkout_shallow_fetch_depth >> ]
   - when:
       condition:
         not:
