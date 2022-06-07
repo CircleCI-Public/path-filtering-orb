@@ -3,7 +3,7 @@ description: >
   and a set of pipeline parameters based on the changes in this push.
 
 orbs: 
-  shallow-checkout: expo/shallow-checkout@1.0.2
+  git: guitarrapc/git-shallow-clone@2.4.0
 
 executor: default
 
