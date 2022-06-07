@@ -45,11 +45,11 @@ parameters:
     default: false
   checkout_shallow_depth:
     type: string
-    description: "Flag value for shallow checkout depth"
+    description: "shallow checkout depth"
     default: "100"
   checkout_shallow_fetch_depth:
     type: string
-    description: "Flag value for shallow checkout fetch depth"
+    description: "shallow checkout fetch depth"
     default: "100"
 
 steps:
