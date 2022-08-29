@@ -19,7 +19,21 @@ def checkout(revision):
 
 output_path = os.environ.get('OUTPUT_PATH')
 head = os.environ.get('CIRCLE_SHA1')
-base_revision = os.environ.get('BASE_REVISION')
+tag = os.environ.get('CIRCLE_TAG')
+s3_bucket_path = os.environ.get('S3_BUCKET_PATH')
+
+if tag is None:
+  base_revision = os.environ.get('BASE_REVISION')
+elif s3_bucket_path:
+  result = subprocess.run(['aws', 's3', 'cp', s3_bucket_path, './', '--region', 'us-east-1'], capture_output=True)
+  if result.returncode != 0:
+    base_revision = subprocess.run(['git', 'rev-list', '--max-parents=0', 'HEAD'], check=True, capture_output=True).stdout.decode('utf-8').strip()
+  else:
+    sub_path=os.path.basename(s3_bucket_path)
+    with open(sub_path, 'r') as file:
+      base = file.read().replace('\n', '')
+      base_revision = base
+
 checkout(base_revision)  # Checkout base revision to make sure it is available for comparison
 checkout(head)  # return to head commit
 

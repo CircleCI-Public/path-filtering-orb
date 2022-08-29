@@ -9,6 +9,11 @@ parameters:
     description: >
       The revision to compare the current one against for the purpose
       of determining changed files.
+  s3_bucket_path:
+    type: string
+    default: ""
+    description: >
+      S3 bucket Path
   mapping:
     type: string
     default: ""
@@ -25,6 +30,7 @@ steps:
   - run:
       environment:
         BASE_REVISION: << parameters.base-revision >>
+        S3_BUCKET_PATH: << parameters.s3_bucket_path >>
         MAPPING: << parameters.mapping >>
         OUTPUT_PATH: << parameters.output-path >>
       name: Set parameters

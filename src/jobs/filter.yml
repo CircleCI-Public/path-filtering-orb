@@ -34,6 +34,10 @@ parameters:
     type: string
     description: "Path to attach the workspace to"
     default: ""
+  s3_bucket_path:
+    type: string
+    description: "S3 bucket Path"
+    default: ""
   resource_class:
     type: string
     description: "Resource class to use"
@@ -54,7 +58,12 @@ steps:
       steps:
         - attach_workspace:
             at: << parameters.workspace_path >>
+  - run:
+      name: Installing aws cli
+      command: |
+        pip install awscli
   - set-parameters:
+      s3_bucket_path: << parameters.s3_bucket_path >>
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>
   - continuation/continue:

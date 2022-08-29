@@ -5,12 +5,13 @@ usage:
   version: 2.1
   setup: true
   orbs:
-    path-filtering: circleci/path-filtering@0.0.1
+    path-filtering: vy-labs/path-filtering@0.0.1
   workflows:
     generate-config:
       jobs:
         - path-filtering/filter:
             base-revision: main
+            s3_bucket_path: s3://bucket-name/folder/file_name
             config-path: .circleci/continue-config.yml
             mapping: |
               src/.* build-code true
