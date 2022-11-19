@@ -14,7 +14,8 @@ parameters:
     default: ""
     description: >
       Mapping of path regular expressions to pipeline parameters and
-      values. One mapping per line, whitespace-delimited.
+      values. If the value is a file, then it will be loaded from the disk. 
+      One mapping per line, whitespace-delimited.
   output-path:
     type: string
     default: "/tmp/pipeline-parameters.json"

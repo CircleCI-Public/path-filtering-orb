@@ -54,10 +54,17 @@ changes = subprocess.run(
   capture_output=True
 ).stdout.decode('utf-8').splitlines()
 
-mappings = [
-  m.split() for m in
-  os.environ.get('MAPPING').splitlines()
-]
+mappingConfig = os.environ.get('MAPPING')
+if os.path.exists(mappingConfig):
+  with open(mappingConfig) as f:
+    mappings = [
+      m.split() for m in f.read().splitlines()
+    ]
+else:
+  mappings = [
+    m.split() for m in
+    mappingConfig.splitlines()
+  ]
 
 def check_mapping(m):
   if 3 != len(m):
@@ -78,4 +85,3 @@ mappings = dict(mappings)
 
 with open(output_path, 'w') as fp:
   fp.write(json.dumps(mappings))
-
