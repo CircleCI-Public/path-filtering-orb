@@ -11,7 +11,7 @@ usage:
       jobs:
         - path-filtering/filter:
             base-revision: main
-            config-path: .circleci/continue-config.yml
+            config-path: .circleci/continue_config.yml
             mapping: |
               src/.* build-code true
               doc/.* build-docs true
