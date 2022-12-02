@@ -20,7 +20,7 @@ parameters:
     default: ""
     description: >
       Mapping of path regular expressions to pipeline parameters and
-      values. If the value is a file, then it will be loaded from the disk. 
+      values. If the value is a file, then it will be loaded from the disk.
       One mapping per line, whitespace-delimited.
   config-path:
     type: string
