@@ -2,7 +2,11 @@ description: >
   Continues a pipeline in the `setup` state based with static config
   and a set of pipeline parameters based on the changes in this push.
 
-executor: default
+executor:
+  name: default
+  tag: << parameters.tag >>
+
+resource_class: << parameters.resource_class >>
 
 parameters:
   base-revision:
@@ -25,9 +29,34 @@ parameters:
   output-path:
     type: string
     default: "/tmp/pipeline-parameters.json"
+  circleci_domain:
+    type: string
+    description: "The domain of the CircleCI installation - defaults to circleci.com. (Only necessary for CircleCI Server users)"
+    default: "circleci.com"
+  workspace_path:
+    type: string
+    description: "Path to attach the workspace to"
+    default: ""
+  resource_class:
+    type: string
+    description: "Resource class to use"
+    default: "small"
+  tag:
+    type: string
+    default: "3.8"
+    description: >
+      Pick a specific circleci/python image variant:
+      https://hub.docker.com/r/cimg/python/tags
 
 steps:
   - checkout
+  - when:
+      condition:
+        not:
+          equal: ["", << parameters.workspace_path >>]
+      steps:
+        - attach_workspace:
+            at: << parameters.workspace_path >>
   - set-parameters:
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>
@@ -35,3 +64,4 @@ steps:
   - continuation/continue:
       configuration_path: << parameters.config-path >>
       parameters: << parameters.output-path >>
+      circleci_domain: << parameters.circleci_domain >>
