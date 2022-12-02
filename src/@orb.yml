@@ -5,7 +5,7 @@ description: >
   This can be useful in a monorepo setup where one may want to trigger different workflows
   based on which module(s) in the repo has changed.
 display:
-  home_url: "https://github.com/CircleCI-Public/path-filtering-orb"
+  home_url: "https://circleci.com/docs/2.0/dynamic-config"
   source_url: "https://github.com/CircleCI-Public/path-filtering-orb"
 
 orbs:

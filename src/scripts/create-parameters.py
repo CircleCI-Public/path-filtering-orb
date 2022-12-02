@@ -4,6 +4,7 @@ import json
 import os
 import re
 import subprocess
+from functools import partial
 
 def checkout(revision):
   """
@@ -17,59 +18,31 @@ def checkout(revision):
     check=True
   )
 
-output_path = os.environ.get('OUTPUT_PATH')
-head = os.environ.get('CIRCLE_SHA1')
-base_revision = os.environ.get('BASE_REVISION')
-checkout(base_revision)  # Checkout base revision to make sure it is available for comparison
-checkout(head)  # return to head commit
+def merge_base(base, head):
+  return subprocess.run(
+    ['git', 'merge-base', base, head],
+    check=True,
+    capture_output=True
+  ).stdout.decode('utf-8').strip()
 
-base = subprocess.run(
-  ['git', 'merge-base', base_revision, head],
-  check=True,
-  capture_output=True
-).stdout.decode('utf-8').strip()
+def parent_commit():
+  return subprocess.run(
+    ['git', 'rev-parse', 'HEAD~1'],
+    check=True,
+    capture_output=True
+  ).stdout.decode('utf-8').strip()
 
-if head == base:
-  try:
-    # If building on the same branch as BASE_REVISION, we will get the
-    # current commit as merge base. In that case try to go back to the
-    # first parent, i.e. the last state of this branch before the
-    # merge, and use that as the base.
-    base = subprocess.run(
-      ['git', 'rev-parse', 'HEAD~1'], # FIXME this breaks on the first commit, fallback to something
-      check=True,
-      capture_output=True
-    ).stdout.decode('utf-8').strip()
-  except:
-    # This can fail if this is the first commit of the repo, so that
-    # HEAD~1 actually doesn't resolve. In this case we can compare
-    # against this magic SHA below, which is the empty tree. The diff
-    # to that is just the first commit as patch.
-    base = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+def changed_files(base, head):
+  return subprocess.run(
+    ['git', '-c', 'core.quotepath=false', 'diff', '--name-only', base, head],
+    check=True,
+    capture_output=True
+  ).stdout.decode('utf-8').splitlines()
 
-print('Comparing {}...{}'.format(base, head))
-changes = subprocess.run(
-  ['git', '-c', 'core.quotepath=false', 'diff', '--name-only', base, head],
-  check=True,
-  capture_output=True
-).stdout.decode('utf-8').splitlines()
-
-mappingConfig = os.environ.get('MAPPING')
-if os.path.exists(mappingConfig):
-  with open(mappingConfig) as f:
-    mappings = [
-      m.split() for m in f.read().splitlines()
-    ]
-else:
-  mappings = [
-    m.split() for m in
-    mappingConfig.splitlines()
-  ]
-
-def check_mapping(m):
+def check_mapping(changes, m):
   if 3 != len(m):
     raise Exception("Invalid mapping")
-  path, param, value = m
+  path, _param, _value = m
   regex = re.compile(r'^' + path + r'$')
   for change in changes:
     if regex.match(change):
@@ -79,9 +52,45 @@ def check_mapping(m):
 def convert_mapping(m):
   return [m[1], json.loads(m[2])]
 
-mappings = filter(check_mapping, mappings)
-mappings = map(convert_mapping, mappings)
-mappings = dict(mappings)
+def write_mappings(mappings, output_path):
+  with open(output_path, 'w') as fp:
+    fp.write(json.dumps(mappings))
 
-with open(output_path, 'w') as fp:
-  fp.write(json.dumps(mappings))
+def create_parameters(output_path, head, base, mapping):
+  checkout(base)  # Checkout base revision to make sure it is available for comparison
+  checkout(head)  # return to head commit
+  base = merge_base(base, head)
+
+  if head == base:
+    try:
+      # If building on the same branch as BASE_REVISION, we will get the
+      # current commit as merge base. In that case try to go back to the
+      # first parent, i.e. the last state of this branch before the
+      # merge, and use that as the base.
+      base = parent_commit()
+    except:
+      # This can fail if this is the first commit of the repo, so that
+      # HEAD~1 actually doesn't resolve. In this case we can compare
+      # against this magic SHA below, which is the empty tree. The diff
+      # to that is just the first commit as patch.
+      base = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+
+  print('Comparing {}...{}'.format(base, head))
+  changes = changed_files(base, head)
+
+  mappings = [
+    m.split() for m in
+    os.environ.get('MAPPING').splitlines()
+  ]
+  mappings = filter(partial(check_mapping, changes), mappings)
+  mappings = map(convert_mapping, mappings)
+  mappings = dict(mappings)
+
+  write_mappings(mappings, output_path)
+
+create_parameters(
+  os.environ.get('OUTPUT_PATH'),
+  os.environ.get('CIRCLE_SHA1'),
+  os.environ.get('BASE_REVISION'),
+  os.environ.get('MAPPING')
+)
