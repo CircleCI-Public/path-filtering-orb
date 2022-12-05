@@ -43,6 +43,11 @@ parameters:
     type: string
     description: "Path to attach the workspace to"
     default: ""
+  output-path:
+    type: string
+    default: "/tmp/pipeline-parameters.json"
+    description: >
+      Path to save the generated parameters to.
   resource_class:
     type: string
     description: "Resource class to use"
@@ -66,6 +71,7 @@ steps:
   - set-parameters:
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>
+      output-path: << parameters.output-path >>
   - continuation/continue:
       configuration_path: << parameters.config-path >>
       parameters: "/tmp/pipeline-parameters.json"

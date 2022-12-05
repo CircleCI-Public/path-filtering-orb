@@ -24,10 +24,10 @@ parameters:
 
 steps:
   - run:
+      name: Set parameters
       environment:
         BASE_REVISION: << parameters.base-revision >>
         MAPPING: << parameters.mapping >>
         OUTPUT_PATH: << parameters.output-path >>
-      name: Set parameters
       shell: /usr/bin/env python3
       command: <<include(scripts/create-parameters.py)>>

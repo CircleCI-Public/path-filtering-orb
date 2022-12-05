@@ -78,10 +78,16 @@ def create_parameters(output_path, head, base, mapping):
   print('Comparing {}...{}'.format(base, head))
   changes = changed_files(base, head)
 
-  mappings = [
-    m.split() for m in
-    os.environ.get('MAPPING').splitlines()
-  ]
+  if os.path.exists(mapping):
+    with open(mapping) as f:
+      mappings = [
+        m.split() for m in f.read().splitlines()
+      ]
+  else:
+    mappings = [
+      m.split() for m in
+      mapping.splitlines()
+    ]
   mappings = filter(partial(check_mapping, changes), mappings)
   mappings = map(convert_mapping, mappings)
   mappings = dict(mappings)
