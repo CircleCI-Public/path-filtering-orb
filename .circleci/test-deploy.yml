@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   path-filtering: circleci/path-filtering@dev:<<pipeline.git.revision>>
-  orb-tools: circleci/orb-tools@11.4
+  orb-tools: circleci/orb-tools@11.5
 
 filters: &filters
   tags:
