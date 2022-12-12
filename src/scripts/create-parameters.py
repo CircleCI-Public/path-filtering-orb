@@ -86,7 +86,7 @@ def create_parameters(output_path, head, base, mapping):
   else:
     mappings = [
       m.split() for m in
-      mapping.splitlines()
+      mapping.splitlines() if m.strip()
     ]
   mappings = filter(partial(check_mapping, changes), mappings)
   mappings = map(convert_mapping, mappings)
