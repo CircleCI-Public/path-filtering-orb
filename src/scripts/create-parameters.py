@@ -56,6 +56,11 @@ def write_mappings(mappings, output_path):
   with open(output_path, 'w') as fp:
     fp.write(json.dumps(mappings))
 
+def is_mapping_line(line: str) -> bool:
+  is_empty_line = (line.strip() == "")
+  is_comment_line = (line.strip().startswith("#"))
+  return not (is_comment_line or is_empty_line)
+
 def create_parameters(output_path, head, base, mapping):
   checkout(base)  # Checkout base revision to make sure it is available for comparison
   checkout(head)  # return to head commit
@@ -81,12 +86,12 @@ def create_parameters(output_path, head, base, mapping):
   if os.path.exists(mapping):
     with open(mapping) as f:
       mappings = [
-        m.split() for m in f.read().splitlines()
+        m.split() for m in f.read().splitlines() if is_mapping_line(m)
       ]
   else:
     mappings = [
       m.split() for m in
-      mapping.splitlines()
+      mapping.splitlines() if is_mapping_line(m)
     ]
   mappings = filter(partial(check_mapping, changes), mappings)
   mappings = map(convert_mapping, mappings)
