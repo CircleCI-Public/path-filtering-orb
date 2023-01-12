@@ -69,10 +69,15 @@ steps:
         - attach_workspace:
             at: << parameters.workspace_path >>
   - set-parameters:
+      configuration_path: << parameters.config-path >>
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>
       output-path: << parameters.output-path >>
+  - split-config/generate-config:
+      config-list-path: /tmp/config-list
+      generated-config-path: "/tmp/generated-config.yml"
+
   - continuation/continue:
-      configuration_path: << parameters.config-path >>
+      configuration_path: "/tmp/generated-config.yml"
       parameters: "/tmp/pipeline-parameters.json"
       circleci_domain: << parameters.circleci_domain >>

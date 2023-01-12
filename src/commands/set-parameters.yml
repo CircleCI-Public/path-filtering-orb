@@ -3,6 +3,11 @@ description: >
   `output-path`.
 
 parameters:
+  config-path:
+    type: string
+    default: ".circleci/continue_config.yml"
+    description: >
+      The location of the config to continue the pipeline with.
   base-revision:
     type: string
     default: "main"

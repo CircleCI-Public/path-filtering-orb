@@ -4,6 +4,7 @@ import json
 import os
 import re
 import subprocess
+import shutil
 from functools import partial
 
 def checkout(revision):
@@ -40,7 +41,7 @@ def changed_files(base, head):
   ).stdout.decode('utf-8').splitlines()
 
 def check_mapping(changes, m):
-  if 3 != len(m):
+  if len(m) !=3 or len(m) !=4:
     raise Exception("Invalid mapping")
   path, _param, _value = m
   regex = re.compile(r'^' + path + r'$')
@@ -51,6 +52,23 @@ def check_mapping(changes, m):
 
 def convert_mapping(m):
   return [m[1], json.loads(m[2])]
+
+def write_config_list(mappings, config_file):
+  files_used = set()
+  for m in mappings:
+    if len(m) == 3:
+      f = config_file
+    elif len(m) == 4:
+      f = m[3]
+
+    if f not in files_used:
+      files_used.add(f)
+
+  with open("/tmp/config-list", 'w') as fp:
+    for line in files_used:
+      fp.write(line)
+      fp.write(b"\n")
+
 
 def write_mappings(mappings, output_path):
   with open(output_path, 'w') as fp:
@@ -89,9 +107,12 @@ def create_parameters(output_path, head, base, mapping):
       mapping.splitlines()
     ]
   mappings = filter(partial(check_mapping, changes), mappings)
+  # output a merged continue-config.yml if mappings have a fourth parameter,
+  # which is a config path
+  write_merged_config_files(mappings, output_path)
+
   mappings = map(convert_mapping, mappings)
   mappings = dict(mappings)
-
   write_mappings(mappings, output_path)
 
 create_parameters(
