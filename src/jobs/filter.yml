@@ -35,9 +35,6 @@ parameters:
     default: ".circleci/continue_config.yml"
     description: >
       The location of the config to continue the pipeline with.
-  output-path:
-    type: string
-    default: "/tmp/pipeline-parameters.json"
   circleci_domain:
     type: string
     description: "The domain of the CircleCI installation - defaults to circleci.com. (Only necessary for CircleCI Server users)"
