@@ -10,7 +10,7 @@ usage:
     generate-config:
       jobs:
         - path-filtering/filter:
-            base-revision: main
+            base-revision: << pipeline.git.base_revision >>
             config-path: .circleci/continue_config.yml
             mapping: |
               src/.* build-code true
