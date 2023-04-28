@@ -1,0 +1,21 @@
+description: >
+  Generate config file from the config list.
+parameters:
+  config-list-path:
+    type: string
+    default: /tmp/filtered-config-list
+    description: >
+      A file path to append config paths.
+      Each path in this file should be relative to the working directory.
+  generated-config-path:
+    type: string
+    default: /tmp/generated-config.yml
+    description: >
+      A file path for the generated config file.
+steps:
+  - run:
+      environment:
+        PARAM_CONFIG_LIST_PATH: <<parameters.config-list-path>>
+        PARAM_GENERATED_CONFIG_PATH: <<parameters.generated-config-path>>
+      name: Generate config
+      command: <<include(scripts/generate-config.sh)>>

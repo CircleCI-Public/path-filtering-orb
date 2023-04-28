@@ -39,22 +39,62 @@ def changed_files(base, head):
     capture_output=True
   ).stdout.decode('utf-8').splitlines()
 
-def check_mapping(changes, m):
-  if 3 != len(m):
-    raise Exception("Invalid mapping")
-  path, _param, _value = m
-  regex = re.compile(r'^' + path + r'$')
-  for change in changes:
-    if regex.match(change):
-      return True
-  return False
+filtered_config_list_file = "/tmp/filtered-config-list"
 
-def convert_mapping(m):
-  return [m[1], json.loads(m[2])]
+def write_filtered_config_list(config_files):
+  with open(filtered_config_list_file, 'w') as fp:
+    fp.writelines(config_files)
 
 def write_mappings(mappings, output_path):
   with open(output_path, 'w') as fp:
     fp.write(json.dumps(mappings))
+
+def write_parameters_from_mappings(mappings, changes, output_path):
+  if not mappings:
+    raise Exception("Mapping cannot be empty!")
+
+  if not output_path:
+    raise Exception("Output-path parameter is not found")
+
+  element_count = len(mappings[0])
+
+  # currently the supported format for each of the mapping parameter is either:
+  # path-regex pipeline-parameter pipeline-parameter-value
+  # OR
+  # path-regex pipeline-parameter pipeline-parameter-value config-file
+  if not (element_count == 3 or element_count == 4):
+    raise Exception("Invalid mapping length of {}".format(element_count))
+
+  filtered_mapping = []
+  filtered_files = set()
+
+  for m in mappings:
+    if len(m) != element_count:
+      raise Exception("Expected {} fields but found {}".format(element_count, len(m)))
+
+    if element_count == 3:
+      path, param, param_value = m
+      config_file = None
+    else:
+      path, param, param_value, config_file = m
+
+    regex = re.compile(r'^' + path + r'$')
+    for change in changes:
+      if regex.match(change):
+        filtered_mapping.append([param, json.loads(param_value)])
+        if config_file:
+          filtered_files.add(config_file + "\n")
+        break
+
+  if not filtered_mapping:
+    print("No change detected in the paths defined in the mapping parameter")
+
+  write_mappings(dict(filtered_mapping), output_path)
+
+  if not filtered_files:
+    filtered_files.add(output_path)
+
+  write_filtered_config_list(filtered_files)
 
 def is_mapping_line(line: str) -> bool:
   is_empty_line = (line.strip() == "")
@@ -93,11 +133,9 @@ def create_parameters(output_path, head, base, mapping):
       m.split() for m in
       mapping.splitlines() if is_mapping_line(m)
     ]
-  mappings = filter(partial(check_mapping, changes), mappings)
-  mappings = map(convert_mapping, mappings)
-  mappings = dict(mappings)
 
-  write_mappings(mappings, output_path)
+  write_parameters_from_mappings(mappings, changes, output_path)
+
 
 create_parameters(
   os.environ.get('OUTPUT_PATH'),
