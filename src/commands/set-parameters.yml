@@ -30,4 +30,4 @@ steps:
         MAPPING: << parameters.mapping >>
         OUTPUT_PATH: << parameters.output-path >>
       shell: /usr/bin/env python3
-      command: <<include(scripts/create-parameters.py)>>
+      command: <<include(scripts/create-parameters.sh)>>

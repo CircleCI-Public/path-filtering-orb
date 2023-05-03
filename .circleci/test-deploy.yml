@@ -15,7 +15,10 @@ jobs:
       - checkout
       - path-filtering/set-parameters:
           mapping: |
-            src/.* test-changes true
+            src/scripts/.* test-scripts true
+            src/jobs/.* test-jobs true
+            src/.* test-common true
+
 
 workflows:
   test-deploy:
