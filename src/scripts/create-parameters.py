@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import json
 import os
 import re
@@ -99,9 +97,10 @@ def create_parameters(output_path, head, base, mapping):
 
   write_mappings(mappings, output_path)
 
-create_parameters(
-  os.environ.get('OUTPUT_PATH'),
-  os.environ.get('CIRCLE_SHA1'),
-  os.environ.get('BASE_REVISION'),
-  os.environ.get('MAPPING')
-)
+if __name__ == "__main__":
+  create_parameters(
+    os.environ.get('OUTPUT_PATH'),
+    os.environ.get('CIRCLE_SHA1'),
+    os.environ.get('BASE_REVISION'),
+    os.environ.get('MAPPING')
+  )

@@ -15,7 +15,9 @@ jobs:
       - checkout
       - path-filtering/set-parameters:
           mapping: |
-            src/.* test-changes true
+            src/scripts/.* test-scripts true
+            src/commands/.* test-commands true
+      - run: cat /tmp/pipeline-parameters.json
 
 workflows:
   test-deploy:
