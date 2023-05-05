@@ -17,5 +17,11 @@ usage:
               doc/.* build-docs true
         - path-filtering/filter:
             base-revision: main
+            config-path: ""
+            mapping: |
+              src/.* build-code true .circleci/build-code-config.yml
+              doc/.* build-docs true .circleci/build-docs-config.yml
+        - path-filtering/filter:
+            base-revision: main
             config-path: .circleci/continue-config.yml
             mapping: .circleci/mapping.conf

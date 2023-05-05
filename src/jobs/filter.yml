@@ -34,7 +34,8 @@ parameters:
     type: string
     default: ".circleci/continue_config.yml"
     description: >
-      The location of the config to continue the pipeline with.
+      The location of the config to continue the pipeline with, please note that this parameter
+      will be ignored if the user passes the config file per mapping in the mapping parameter
   circleci_domain:
     type: string
     description: "The domain of the CircleCI installation - defaults to circleci.com. (Only necessary for CircleCI Server users)"
@@ -72,7 +73,10 @@ steps:
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>
       output-path: << parameters.output-path >>
+  - generate-config:
+      config-list-path: /tmp/filtered-config-list
+      generated-config-path: "/tmp/generated-config.yml"
   - continuation/continue:
-      configuration_path: << parameters.config-path >>
+      configuration_path: "/tmp/generated-config.yml"
       parameters: << parameters.output-path >>
       circleci_domain: << parameters.circleci_domain >>
