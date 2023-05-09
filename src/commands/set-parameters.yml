@@ -21,6 +21,12 @@ parameters:
     default: "/tmp/pipeline-parameters.json"
     description: >
       Path to save the generated parameters to.
+  config-path:
+    type: string
+    default: ".circleci/continue_config.yml"
+    description: >
+      The location of the config to continue the pipeline with, please note that this parameter
+      will be ignored if the user passes the config file per mapping in the mapping parameter
 
 steps:
   - run:
@@ -29,5 +35,6 @@ steps:
         BASE_REVISION: << parameters.base-revision >>
         MAPPING: << parameters.mapping >>
         OUTPUT_PATH: << parameters.output-path >>
+        CONFIG_PATH: << parameters.config-path >>
       shell: /usr/bin/env python3
       command: <<include(scripts/create-parameters.py)>>
