@@ -9,6 +9,10 @@ Additional READMEs are available in each directory.
 
 ## Resources
 
+[Dynamic Config](https://circleci.com/docs/2.0/dynamic-config) - CircleCI functionality that the path-filtering-orb contributes to
+
+[Setup Workflows Documentation](https://github.com/CircleCI-Public/api-preview-docs/blob/master/docs/setup-workflows.md#concepts) - Doc explaining a special type of workflow used in dynamic config
+
 [CircleCI Orb Registry Page](https://circleci.com/developer/orbs/orb/circleci/path-filtering) - The official registry page of this orb for all versions, executors, commands, and jobs described.
 
 [CircleCI Orb Docs](https://circleci.com/docs/2.0/orb-intro/#section=configuration) - Docs for using, creating, and publishing CircleCI Orbs.
