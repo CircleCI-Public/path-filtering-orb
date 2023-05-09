@@ -49,7 +49,7 @@ def write_mappings(mappings, output_path):
   with open(output_path, 'w') as fp:
     fp.write(json.dumps(mappings))
 
-def write_parameters_from_mappings(mappings, changes, output_path):
+def write_parameters_from_mappings(mappings, changes, output_path, config_path):
   if not mappings:
     raise Exception("Mapping cannot be empty!")
 
@@ -92,7 +92,7 @@ def write_parameters_from_mappings(mappings, changes, output_path):
   write_mappings(dict(filtered_mapping), output_path)
 
   if not filtered_files:
-    filtered_files.add(output_path)
+    filtered_files.add(config_path)
 
   write_filtered_config_list(filtered_files)
 
@@ -101,7 +101,7 @@ def is_mapping_line(line: str) -> bool:
   is_comment_line = (line.strip().startswith("#"))
   return not (is_comment_line or is_empty_line)
 
-def create_parameters(output_path, head, base, mapping):
+def create_parameters(output_path, config_path, head, base, mapping):
   checkout(base)  # Checkout base revision to make sure it is available for comparison
   checkout(head)  # return to head commit
   base = merge_base(base, head)
@@ -134,11 +134,12 @@ def create_parameters(output_path, head, base, mapping):
       mapping.splitlines() if is_mapping_line(m)
     ]
 
-  write_parameters_from_mappings(mappings, changes, output_path)
+  write_parameters_from_mappings(mappings, changes, output_path, config_path)
 
 
 create_parameters(
   os.environ.get('OUTPUT_PATH'),
+  os.environ.get('CONFIG_PATH'),
   os.environ.get('CIRCLE_SHA1'),
   os.environ.get('BASE_REVISION'),
   os.environ.get('MAPPING')
