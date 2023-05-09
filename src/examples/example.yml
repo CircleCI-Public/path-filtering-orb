@@ -1,5 +1,5 @@
 description: >
-  Continue a pipeline from the setup phase with supplied configuation
+  Continue a pipeline from the setup phase with supplied configuration
   and pipeline parameters generated from the files changed.
 usage:
   version: 2.1
@@ -11,7 +11,17 @@ usage:
       jobs:
         - path-filtering/filter:
             base-revision: main
-            config-path: .circleci/continue-config.yml
+            config-path: .circleci/continue_config.yml
             mapping: |
               src/.* build-code true
               doc/.* build-docs true
+        - path-filtering/filter:
+            base-revision: main
+            config-path: ""
+            mapping: |
+              src/.* build-code true .circleci/build-code-config.yml
+              doc/.* build-docs true .circleci/build-docs-config.yml
+        - path-filtering/filter:
+            base-revision: main
+            config-path: .circleci/continue-config.yml
+            mapping: .circleci/mapping.conf

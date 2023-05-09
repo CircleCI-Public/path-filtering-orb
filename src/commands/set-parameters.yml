@@ -14,7 +14,8 @@ parameters:
     default: ""
     description: >
       Mapping of path regular expressions to pipeline parameters and
-      values. One mapping per line, whitespace-delimited.
+      values. One mapping per line, whitespace-delimited. If duplicate
+      parameter keys are found, the last matching pattern will apply.
   output-path:
     type: string
     default: "/tmp/pipeline-parameters.json"
@@ -23,10 +24,10 @@ parameters:
 
 steps:
   - run:
+      name: Set parameters
       environment:
         BASE_REVISION: << parameters.base-revision >>
         MAPPING: << parameters.mapping >>
         OUTPUT_PATH: << parameters.output-path >>
-      name: Set parameters
       shell: /usr/bin/env python3
       command: <<include(scripts/create-parameters.py)>>

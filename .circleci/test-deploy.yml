@@ -1,0 +1,51 @@
+version: 2.1
+orbs:
+  path-filtering: circleci/path-filtering@dev:<<pipeline.git.revision>>
+  orb-tools: circleci/orb-tools@11.5
+
+filters: &filters
+  tags:
+    only: /.+/
+
+jobs:
+  set-parameters-test:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - path-filtering/set-parameters:
+          mapping: |
+            src/.* test-changes true
+      - path-filtering/set-parameters:
+          mapping: |
+            src/commands/.* test-commands true .circleci/config.yml
+            src/examples/.* test-examples true .circleci/test-deploy.yml
+            src/jobs/.* test-jobs true .circleci/config.yml
+            src/tests/.* test-tests true .circleci/test-deploy.yml
+
+      - path-filtering/generate-config:
+          config-list-path: /tmp/filtered-config-list
+          generated-config-path: "/tmp/generated-config.yml"
+
+
+
+workflows:
+  test-deploy:
+    jobs:
+      - set-parameters-test:
+          filters: *filters
+      - orb-tools/pack:
+          filters: *filters
+      - orb-tools/publish:
+          orb-name: circleci/path-filtering
+          vcs-type: << pipeline.project.type >>
+          pub-type: production
+          requires:
+            - orb-tools/pack
+            - set-parameters-test
+          context: orb-publisher
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
