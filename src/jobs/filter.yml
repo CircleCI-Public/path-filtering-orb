@@ -73,6 +73,7 @@ steps:
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>
       output-path: << parameters.output-path >>
+      config-path: << parameters.config-path >>
   - generate-config:
       config-list-path: /tmp/filtered-config-list
       generated-config-path: "/tmp/generated-config.yml"
