@@ -4,6 +4,7 @@ description: >
   Continue a pipeline based on paths of changed files.
   This can be useful in a monorepo setup where one may want to trigger different workflows
   based on which module(s) in the repo has changed.
+  This orb does not support server at this time.
 display:
   home_url: "https://circleci.com/docs/2.0/dynamic-config"
   source_url: "https://github.com/CircleCI-Public/path-filtering-orb"
