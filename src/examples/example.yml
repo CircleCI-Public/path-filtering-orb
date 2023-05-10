@@ -17,7 +17,11 @@ usage:
               doc/.* build-docs true
         - path-filtering/filter:
             base-revision: main
-            config-path: ""
+            # This config-path file will only be used to continue the Pipeline if none of the changes
+            # satisfy the below mapping conditions.
+            config-path: .circleci/continue_config.yml
+            # Please note the two config files specified below cannot share the same job, workflow or command names.
+            # This is due to the fact that we're merging those into one file behind the scenes.
             mapping: |
               src/.* build-code true .circleci/build-code-config.yml
               doc/.* build-docs true .circleci/build-docs-config.yml
