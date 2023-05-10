@@ -4,7 +4,6 @@ import json
 import os
 import re
 import subprocess
-from functools import partial
 
 def checkout(revision):
   """
@@ -33,11 +32,40 @@ def parent_commit():
   ).stdout.decode('utf-8').strip()
 
 def changed_files(base, head):
-  return subprocess.run(
-    ['git', '-c', 'core.quotepath=false', 'diff', '--name-only', base, head],
+  # Get all of the commit hashes, subjects, and bodies between base and head
+  commits = subprocess.run(
+    ['git',
+     '-c',
+     'core.quotepath=false',
+     'log',
+     '--format=%H,%s,%b',
+     f'{base}...{head}'
+    ],
     check=True,
     capture_output=True
   ).stdout.decode('utf-8').splitlines()
+  
+  # Filter the commits list so it doesn't contain 
+  # any that include '[skip ci]' or '[ci skip]'
+  commits = list(filter(
+    lambda commit: '[skip ci]' not in commit and '[ci skip]' not in commit, commits
+    ))
+  changes = []
+  
+  # Get the list of changed files for each commit and put them in a list
+  for commit in commits:
+    commit_hash = commit.split(',', maxsplit=1)[0]
+    change = subprocess.run(
+      [f'git log --name-only -1 --format=\'\' {commit_hash}'],
+      check=True,
+      shell=True,
+      capture_output=True
+    ).stdout.decode('utf-8').splitlines()
+    changes += change
+  
+  # Remove any duplicate values from the list
+  changes = list(dict.fromkeys(changes))
+  return changes
 
 filtered_config_list_file = "/tmp/filtered-config-list"
 
