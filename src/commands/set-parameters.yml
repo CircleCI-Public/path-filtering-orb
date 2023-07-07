@@ -1,6 +1,6 @@
 description: >
   Generates a set of pipeline parameters from `mapping` at
-  `output-path`.
+  `output-path`. Python is required to run this command.
 
 parameters:
   base-revision:
@@ -16,6 +16,7 @@ parameters:
       Mapping of path regular expressions to pipeline parameters and
       values. One mapping per line, whitespace-delimited. If duplicate
       parameter keys are found, the last matching pattern will apply.
+      String values must be double-quoted.
   output-path:
     type: string
     default: "/tmp/pipeline-parameters.json"
