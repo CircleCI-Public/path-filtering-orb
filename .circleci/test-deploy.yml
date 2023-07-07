@@ -16,6 +16,7 @@ jobs:
       - path-filtering/set-parameters:
           mapping: |
             src/.* test-changes true
+            src/examples/.* string-example "value"
       - path-filtering/set-parameters:
           config-path: ".circleci/test-deploy.yml"
           mapping: |
