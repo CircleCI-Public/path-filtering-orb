@@ -2,16 +2,12 @@
 
 # GitHub's URL for the latest release, will redirect.
 GITHUB_BASE_URL="https://github.com/mikefarah/yq"
-LATEST_URL="${GITHUB_BASE_URL}/releases/latest/"
 DESTDIR="${DESTDIR:-/usr/local/bin}"
+VERSION="4.34.1"
 
 function installYq() {
   echo "Checking For yq + CURL"
   if command -v curl >/dev/null 2>&1 && ! command -v yq >/dev/null 2>&1; then
-    if [ -z "$VERSION" ]; then
-      VERSION=$(curl -sLI -o /dev/null -w '%{url_effective}' "$LATEST_URL" | cut -d "v" -f 2)
-    fi
-
     echo "Installing yq v${VERSION}"
 
     uname -a | grep Darwin > /dev/null 2>&1 && OS='darwin' || OS='linux'
