@@ -10,6 +10,9 @@ description: >
   supplied value for the setup workflow continuation. This way the
   continuation config can be filtered to only perform relevant tasks.
 
+orbs:
+  git: guitarrapc/git-shallow-clone@2.6.0
+
 executor:
   name: default
   tag: << parameters.tag >>
@@ -59,9 +62,33 @@ parameters:
     description: >
       Pick a specific cimg/python image variant:
       https://hub.docker.com/r/cimg/python/tags
+  enable_shallow_checkout:
+    type: boolean
+    description: "Flag value for whether shallow checkout is used or not"
+    default: false
+  checkout_shallow_depth:
+    type: string
+    description: "shallow checkout depth"
+    default: "100"
+  checkout_shallow_fetch_depth:
+    type: string
+    description: "shallow checkout fetch depth"
+    default: "100"
 
 steps:
-  - checkout
+  - when:
+      condition:
+        not:
+          equal: [ "", << parameters.enable_shallow_checkout >> ]
+      steps:
+        - checkout
+  - when:
+      condition:
+          equal: [ "", << parameters.enable_shallow_checkout >> ]
+      steps:
+        - git/checkout_shallow:
+            depth: [ "1", << parameters.checkout_shallow_depth >> ]
+            fetch_depth: [ "1", << parameters.checkout_shallow_fetch_depth >> ]
   - when:
       condition:
         not:
