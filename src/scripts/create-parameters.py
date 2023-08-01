@@ -25,11 +25,11 @@ def merge_base(base, head):
 
 def eval_base(base):
   if base.startswith('$'):
-    return subprocess.run(
+    value = subprocess.run(
       ['sh', '-c', f"echo {base}"],
       capture_output=True
     ).stdout.decode('utf-8').strip()
-  
+    return 'main' if value == '' else value
   return base
 
 def parent_commit():
