@@ -8,7 +8,8 @@ parameters:
     default: "main"
     description: >
       The revision to compare the current one against for the purpose
-      of determining changed files.
+      of determining changed files. Supports passing environment variables,
+      eg. $CIRCLE_BRANCH, or shell script evaluating to a string, eg. $(echo "dev").
   mapping:
     type: string
     default: ""

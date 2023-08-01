@@ -22,7 +22,8 @@ parameters:
     default: "main"
     description: >
       The revision to compare the current one against for the purpose
-      of determining changed files.
+      of determining changed files. Supports passing environment variables,
+      eg. $CIRCLE_BRANCH, or shell script evaluating to a string, eg. $(echo "dev").
   mapping:
     type: string
     default: ""
@@ -59,6 +60,10 @@ parameters:
     description: >
       Pick a specific cimg/python image variant:
       https://hub.docker.com/r/cimg/python/tags
+  before_set_params_script:
+      default: ""
+      description: Script to run before set-parameters step. Used to load custom environment variables.
+      type: string
 
 steps:
   - checkout
@@ -69,6 +74,14 @@ steps:
       steps:
         - attach_workspace:
             at: << parameters.workspace_path >>
+  - when:
+      condition:
+        not:
+          equal: ["", << parameters.before_set_params_script >>]
+      steps:
+        - run:
+            name: Before set-parameters script
+            command: << parameters.before_set_params_script >>
   - set-parameters:
       base-revision: << parameters.base-revision >>
       mapping: << parameters.mapping >>

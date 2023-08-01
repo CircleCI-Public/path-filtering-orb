@@ -23,6 +23,15 @@ def merge_base(base, head):
     capture_output=True
   ).stdout.decode('utf-8').strip()
 
+def eval_base(base):
+  if base.startswith('$'):
+    value = subprocess.run(
+      ['sh', '-c', f"echo {base}"],
+      capture_output=True
+    ).stdout.decode('utf-8').strip()
+    return 'main' if value == '' else value
+  return base
+
 def parent_commit():
   return subprocess.run(
     ['git', 'rev-parse', 'HEAD~1'],
@@ -112,6 +121,7 @@ def is_mapping_line(line: str) -> bool:
   return not (is_comment_line or is_empty_line)
 
 def create_parameters(output_path, config_path, head, base, mapping):
+  base = eval_base(base) # Evaluate base revision if it is an environment variable or script
   checkout(base)  # Checkout base revision to make sure it is available for comparison
   checkout(head)  # return to head commit
   base = merge_base(base, head)
