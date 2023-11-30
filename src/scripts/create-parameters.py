@@ -11,10 +11,21 @@ def checkout(revision):
   :param revision: The revision to checkout
   :type revision: str
   """
-  subprocess.run(
-    ['git', 'checkout', revision],
-    check=True
-  )
+  try:
+    subprocess.run(
+      ['git', 'checkout', revision],
+      check=True
+    )
+  except:
+    subprocess.run(
+      ['git', 'checkout', 'HEAD~1'],
+      check=True
+    )
+  return subprocess.run(
+    ['git', 'rev-parse', 'HEAD'],
+    check=True,
+    capture_output=True
+  ).stdout.decode('utf-8').strip()
 
 def merge_base(base, head):
   return subprocess.run(
@@ -112,8 +123,8 @@ def is_mapping_line(line: str) -> bool:
   return not (is_comment_line or is_empty_line)
 
 def create_parameters(output_path, config_path, head, base, mapping):
-  checkout(base)  # Checkout base revision to make sure it is available for comparison
-  checkout(head)  # return to head commit
+  base = checkout(base)  # Checkout base revision to make sure it is available for comparison
+  head = checkout(head)  # return to head commit
   base = merge_base(base, head)
 
   if head == base:
