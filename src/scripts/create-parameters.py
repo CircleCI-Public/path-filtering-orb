@@ -32,7 +32,8 @@ def parent_commit():
 
 def changed_files(base, head):
   return subprocess.run(
-    ['git', '-c', 'core.quotepath=false', 'diff', '--name-only', base, head],
+    ['git', '-c', 'core.quotepath=false',
+     'diff', '--name-only', '--no-renames', '--no-find-copies', base, head],
     check=True,
     capture_output=True
   ).stdout.decode('utf-8').splitlines()
