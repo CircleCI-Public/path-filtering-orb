@@ -52,7 +52,7 @@ function generateConfig() {
   # shellcheck disable=SC2154,SC2016
   < "${PARAM_CONFIG_LIST_PATH}" \
   awk 'NF {$1=$1; printf "\"%s\" ", $0}' \
-  | xargs yq eval-all '. as $item ireduce ({}; . * $item )' \
+  | xargs yq eval-all 'explode(.) | . as $item ireduce ({}; . * $item )' \
   | tee "${PARAM_GENERATED_CONFIG_PATH}"
 }
 
