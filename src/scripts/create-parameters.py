@@ -111,12 +111,12 @@ def is_mapping_line(line: str) -> bool:
   is_comment_line = (line.strip().startswith("#"))
   return not (is_comment_line or is_empty_line)
 
-def create_parameters(output_path, config_path, head, base, mapping):
+def create_parameters(output_path, config_path, head, base, mapping, allow_same_revision_compare):
   checkout(base)  # Checkout base revision to make sure it is available for comparison
   checkout(head)  # return to head commit
   base = merge_base(base, head)
 
-  if head == base:
+  if head == base and not allow_same_revision_compare:
     try:
       # If building on the same branch as BASE_REVISION, we will get the
       # current commit as merge base. In that case try to go back to the
@@ -154,4 +154,5 @@ if __name__ == "__main__":
     os.environ.get('CIRCLE_SHA1'),
     os.environ.get('BASE_REVISION'),
     os.environ.get('MAPPING')
+    os.environ.get('ALLOW_SAME_REVISION_COMPARE')
   )
