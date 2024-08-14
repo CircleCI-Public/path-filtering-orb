@@ -7,13 +7,12 @@ parameters:
       Limit fetch depth to the specified number of commit from a remote branch history.
       Refer git fetch documentation for more information.
     type: integer
-    default: 1
   fetch_depth:
     description: |
       Addtional fetch depth to the specified number of commit from a remote branch history.
       Pass more number then depth when you want to check futher commit history.
     type: integer
-    default: 10
+    default: "10"
   no_tags:
     description: |
       true to add '--no-tags' when fetching.
