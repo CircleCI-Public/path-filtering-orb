@@ -17,7 +17,7 @@ git --version
 mkdir -p "$SSH_CONFIG_DIR"
 chmod 0700 "$SSH_CONFIG_DIR"
 
-if [ -x "$(command -v ssh-keyscan)" ] && { [ "${KEYSCAN_GITHUB}" = "true" ] || [ "${KEYSCAN_BITBUCKET}" = "true" ] }; then
+if [ -x "$(command -v ssh-keyscan)" ] && ( [ "${KEYSCAN_GITHUB}" = "true" ] || [ "${KEYSCAN_BITBUCKET}" = "true" ] ); then
     if [ "${KEYSCAN_GITHUB}" = "true" ]; then
     ssh-keyscan -H github.com >> "$SSH_CONFIG_DIR/known_hosts"
     fi
