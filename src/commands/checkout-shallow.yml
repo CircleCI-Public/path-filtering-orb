@@ -1,4 +1,4 @@
-description: >
+description: |
   Provides git shallow clone instead of full clone.
   This command is for simple usage when you don't need options for clone, fetch and tag fetch.
 parameters:
@@ -6,14 +6,14 @@ parameters:
     description: |
       Limit fetch depth to the specified number of commit from a remote branch history.
       Refer git fetch documentation for more information.
-    type: string
-    default: "1"
+    type: integer
+    default: 1
   fetch_depth:
     description: |
       Addtional fetch depth to the specified number of commit from a remote branch history.
       Pass more number then depth when you want to check futher commit history.
-    type: string
-    default: "10"
+    type: integer
+    default: 10
   no_tags:
     description: |
       true to add '--no-tags' when fetching.
