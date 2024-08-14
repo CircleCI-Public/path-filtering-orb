@@ -10,9 +10,6 @@ description: >
   supplied value for the setup workflow continuation. This way the
   continuation config can be filtered to only perform relevant tasks.
 
-orbs:
-  git: guitarrapc/git-shallow-clone@2.6.0
-
 executor:
   name: default
   tag: << parameters.tag >>
