@@ -4,11 +4,13 @@ set -ex
 # Workaround old docker images with incorrect $HOME
 # check https://github.com/docker/docker/issues/2968 for details
 if [ "${HOME}" = "/" ]; then
-    export HOME=$(getent passwd $(id -un) | cut -d: -f6)
+    ID_UN="$(id -un)"
+    HOME="$(getent passwd "${ID_UN}" | cut -d: -f6)"
+    export "${HOME}"
 fi
 
 # known_hosts / id_rsa
-export SSH_CONFIG_DIR=${SSH_CONFIG_DIR:-"${HOME}/.ssh"}
+export SSH_CONFIG_DIR="${SSH_CONFIG_DIR:-"${HOME}/.ssh"}"
 echo "Using SSH Config Dir '$SSH_CONFIG_DIR'"
 git --version
 
@@ -16,10 +18,10 @@ mkdir -p "$SSH_CONFIG_DIR"
 chmod 0700 "$SSH_CONFIG_DIR"
 
 if [ -x "$(command -v ssh-keyscan)" ] && ([ "${KEYSCAN_GITHUB}" == "true" ] || [ "${KEYSCAN_BITBUCKET}" == "true" ]); then
-    if [ "${KEYSCAN_GITHUB}" == "true" ]; then
+    if [ "${KEYSCAN_GITHUB}" = "true" ]; then
     ssh-keyscan -H github.com >> "$SSH_CONFIG_DIR/known_hosts"
     fi
-    if [ "${KEYSCAN_BITBUCKET}" == "true" ]; then
+    if [ "${KEYSCAN_BITBUCKET}" = "true" ]; then
     ssh-keyscan -H bitbucket.org >> "$SSH_CONFIG_DIR/known_hosts"
     fi
 fi
@@ -71,8 +73,8 @@ if [ "${NO_TAGS}" == 'true' ]; then
 fi
 
 # Replace "~" in `$CIRCLE_WORKING_DIRECTORY` to `$HOME`
-if [ "$0" == "/bin/bash" ]; then
-    working_directory=${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}
+if [ "$0" = "/bin/bash" ]; then
+    working_directory="${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}"
 else
     working_directory=$(echo "$CIRCLE_WORKING_DIRECTORY" | sed -e "s|^~|$HOME|g")
 fi
@@ -80,22 +82,20 @@ fi
 # Checkout. SourceCaching? or not.
 if [ -e "$working_directory/${REPO_PATH}/.git" ]; then
     echo 'Fetching into existing repository'
-    existing_repo='true'
     cd "$working_directory/${REPO_PATH}"
     git remote set-url origin "$CIRCLE_REPOSITORY_URL" || true
 else
     echo 'Cloning git repository'
-    existing_repo='false'
     mkdir -p "$working_directory/${REPO_PATH}"
     cd "$working_directory/${REPO_PATH}"
-    git clone ${clone_tag_args} --depth ${DEPTH} $CIRCLE_REPOSITORY_URL .
+    git clone ${clone_tag_args} --depth ${DEPTH} "$CIRCLE_REPOSITORY_URL" .
 fi
 
 # NOTE: Original checkout fetch only if SourceCaching, but we fetch always for depth selection.
 echo 'Fetching from remote repository'
 if [ -n "$CIRCLE_TAG" ]; then
     git fetch ${fetch_tag_args} --depth "${FETCH_DEPTH}" --force --tags origin "+refs/tags/${CIRCLE_TAG}:refs/tags/${CIRCLE_TAG}"
-elif echo $CIRCLE_BRANCH | grep -E ^pull\/[0-9]+/head$ > /dev/null; then
+elif echo "$CIRCLE_BRANCH" | grep -E ^pull\/[0-9]+/head$ > /dev/null; then
     # pull request called from api. Input should be `pull/123/head` see detail for https://github.com/guitarrapc/git-shallow-clone-orb/issues/34
     git fetch ${fetch_tag_args} --depth "${FETCH_DEPTH}" --force origin "+refs/${CIRCLE_BRANCH}:remotes/origin/${CIRCLE_BRANCH}"
 else
