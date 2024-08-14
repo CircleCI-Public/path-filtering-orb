@@ -6,7 +6,7 @@ set -ex
 if [ "${HOME}" = "/" ]; then
     ID_UN="$(id -un)"
     HOME="$(getent passwd "${ID_UN}" | cut -d: -f6)"
-    export "${HOME}"
+    export HOME
 fi
 
 # known_hosts / id_rsa
@@ -17,7 +17,7 @@ git --version
 mkdir -p "$SSH_CONFIG_DIR"
 chmod 0700 "$SSH_CONFIG_DIR"
 
-if [ -x "$(command -v ssh-keyscan)" ] && ([ "${KEYSCAN_GITHUB}" == "true" ] || [ "${KEYSCAN_BITBUCKET}" == "true" ]); then
+if [ -x "$(command -v ssh-keyscan)" ] && {[ "${KEYSCAN_GITHUB}" = "true" ] || [ "${KEYSCAN_BITBUCKET}" = "true" ]}; then
     if [ "${KEYSCAN_GITHUB}" = "true" ]; then
     ssh-keyscan -H github.com >> "$SSH_CONFIG_DIR/known_hosts"
     fi
@@ -67,7 +67,7 @@ if [ -n "$CIRCLE_TAG" ]; then
     clone_tag_args=
     fetch_tag_args="--tags"
 fi
-if [ "${NO_TAGS}" == 'true' ]; then
+if [ "${NO_TAGS}" = 'true' ]; then
     clone_tag_args="--no-tags"
     fetch_tag_args="--no-tags"
 fi
@@ -88,18 +88,18 @@ else
     echo 'Cloning git repository'
     mkdir -p "$working_directory/${REPO_PATH}"
     cd "$working_directory/${REPO_PATH}"
-    git clone ${clone_tag_args} --depth ${DEPTH} "$CIRCLE_REPOSITORY_URL" .
+    git clone ${clone_tag_args} --depth "${DEPTH}" "$CIRCLE_REPOSITORY_URL" .
 fi
 
 # NOTE: Original checkout fetch only if SourceCaching, but we fetch always for depth selection.
 echo 'Fetching from remote repository'
 if [ -n "$CIRCLE_TAG" ]; then
     git fetch ${fetch_tag_args} --depth "${FETCH_DEPTH}" --force --tags origin "+refs/tags/${CIRCLE_TAG}:refs/tags/${CIRCLE_TAG}"
-elif echo "$CIRCLE_BRANCH" | grep -E ^pull\/[0-9]+/head$ > /dev/null; then
+elif echo "$CIRCLE_BRANCH" | grep -E '^pull\/[0-9]+/head$' > /dev/null; then
     # pull request called from api. Input should be `pull/123/head` see detail for https://github.com/guitarrapc/git-shallow-clone-orb/issues/34
     git fetch ${fetch_tag_args} --depth "${FETCH_DEPTH}" --force origin "+refs/${CIRCLE_BRANCH}:remotes/origin/${CIRCLE_BRANCH}"
 else
-    git fetch ${fetch_tag_args} --depth "${FETCH_DEPTH}" --force origin +refs/heads/${CIRCLE_BRANCH}:refs/remotes/origin/${CIRCLE_BRANCH}
+    git fetch ${fetch_tag_args} --depth "${FETCH_DEPTH}" --force origin "+refs/heads/${CIRCLE_BRANCH}:refs/remotes/origin/${CIRCLE_BRANCH}"
 fi
 
 # Check the commit ID of the checked out code
