@@ -17,7 +17,7 @@ git --version
 mkdir -p "$SSH_CONFIG_DIR"
 chmod 0700 "$SSH_CONFIG_DIR"
 
-if [ -x "$(command -v ssh-keyscan)" ] && ( [ "${KEYSCAN_GITHUB}" = "true" ] || [ "${KEYSCAN_BITBUCKET}" = "true" ] ); then
+if [ -x "$(command -v ssh-keyscan)" ] && { [ "${KEYSCAN_GITHUB}" = "true" ] || [ "${KEYSCAN_BITBUCKET}" = "true" ]; }; then
     if [ "${KEYSCAN_GITHUB}" = "true" ]; then
     ssh-keyscan -H github.com >> "$SSH_CONFIG_DIR/known_hosts"
     fi
@@ -55,6 +55,7 @@ if (: "${CHECKOUT_KEY_PUBLIC?}") 2>/dev/null; then
     printf "%s" "$CHECKOUT_KEY_PUBLIC" > "$SSH_CONFIG_DIR/id_rsa.pub"
 fi
 
+# shellcheck disable=SC2016
 export GIT_SSH_COMMAND='ssh -i "$SSH_CONFIG_DIR/id_rsa" -o UserKnownHostsFile="$SSH_CONFIG_DIR/known_hosts"'
 
 # use git+ssh instead of https
