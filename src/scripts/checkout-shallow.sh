@@ -17,7 +17,7 @@ git --version
 mkdir -p "$SSH_CONFIG_DIR"
 chmod 0700 "$SSH_CONFIG_DIR"
 
-if [ -x "$(command -v ssh-keyscan)" ] && {[ "${KEYSCAN_GITHUB}" = "true" ] || [ "${KEYSCAN_BITBUCKET}" = "true" ]}; then
+if [ -x "$(command -v ssh-keyscan)" ] && { [ "${KEYSCAN_GITHUB}" = "true" ] || [ "${KEYSCAN_BITBUCKET}" = "true" ] }; then
     if [ "${KEYSCAN_GITHUB}" = "true" ]; then
     ssh-keyscan -H github.com >> "$SSH_CONFIG_DIR/known_hosts"
     fi
@@ -73,11 +73,7 @@ if [ "${NO_TAGS}" = 'true' ]; then
 fi
 
 # Replace "~" in `$CIRCLE_WORKING_DIRECTORY` to `$HOME`
-if [ "$0" = "/bin/bash" ]; then
-    working_directory="${CIRCLE_WORKING_DIRECTORY/#\~/$HOME}"
-else
-    working_directory=$(echo "$CIRCLE_WORKING_DIRECTORY" | sed -e "s|^~|$HOME|g")
-fi
+working_directory=$(echo "$CIRCLE_WORKING_DIRECTORY" | sed -e "s|^~|$HOME|g")
 
 # Checkout. SourceCaching? or not.
 if [ -e "$working_directory/${REPO_PATH}/.git" ]; then
