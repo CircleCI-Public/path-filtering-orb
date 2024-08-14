@@ -39,5 +39,12 @@ parameters:
     default: .
 steps:
   - run:
+      environment:
+        KEYSCAN_GITHUB: <<parameters.keyscan_github>>
+        KEYSCAN_BITBUCKET: <<parameters.keyscan_bitbucket>>
+        NO_TAGS: << parameters.no_tags >>
+        REPO_PATH: << parameters.path >>
+        DEPTH: << parameters.depth >>
+        FETCH_DEPTH: << parameters.fetch_depth >>
       name: Checkout code shallow
       command: <<include(scripts/checkout-shallow.sh)>>
