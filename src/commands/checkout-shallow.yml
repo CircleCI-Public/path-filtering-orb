@@ -3,19 +3,19 @@ description: >
   This command is for simple usage when you don't need options for clone, fetch and tag fetch.
 parameters:
   depth:
-    description: >
+    description: |
       Limit fetch depth to the specified number of commit from a remote branch history.
       Refer git fetch documentation for more information.
     type: integer
     default: 1
   fetch_depth:
-    description: >
+    description: |
       Addtional fetch depth to the specified number of commit from a remote branch history.
       Pass more number then depth when you want to check futher commit history.
     type: integer
     default: 10
   no_tags:
-    description: >
+    description: |
       true to add '--no-tags' when fetching.
       As git not offer tag depth, we only able to control fetch all tags or not.
       This enable you to stop fetch tags when you have vast numbers of tags during specified fetch depth.
@@ -23,17 +23,17 @@ parameters:
     type: boolean
     default: false
   keyscan_github:
-    description: >
+    description: |
       Pass `true` to dynamically get ssh-rsa from `github.com`.
     type: boolean
     default: false
   keyscan_bitbucket:
-    description: >
+    description: |
       Pass `true` to dynamically get ssh-rsa from `bitbucket.org`.
     type: boolean
     default: false
   path:
-    description: >
+    description: |
       Checkout directory (default: job working_directory)
     type: string
     default: .
