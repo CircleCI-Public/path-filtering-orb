@@ -81,7 +81,7 @@ steps:
       condition:
           equal: [ "", << parameters.enable_shallow_checkout >> ]
       steps:
-        - git/checkout_shallow:
+        - checkout-shallow:
             depth: [ "1", << parameters.checkout_shallow_depth >> ]
             fetch_depth: [ "1", << parameters.checkout_shallow_fetch_depth >> ]
   - when:
