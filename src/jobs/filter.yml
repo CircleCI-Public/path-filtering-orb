@@ -10,9 +10,14 @@ description: >
   supplied value for the setup workflow continuation. This way the
   continuation config can be filtered to only perform relevant tasks.
 
-executor:
-  name: default
-  tag: << parameters.tag >>
+executors:
+  - name: custom
+    tag: << parameters.tag >>
+    image: << parameters.custom-image >>
+    docker-username: << parameters.docker-username >>
+    docker-password: << parameters.docker-password >>
+  - name: default
+    tag: << parameters.tag >>
 
 resource_class: << parameters.resource_class >>
 
@@ -59,9 +64,21 @@ parameters:
     description: >
       Pick a specific cimg/python image variant:
       https://hub.docker.com/r/cimg/python/tags
+  image:
+    type: string
+    default: "cimg/python"
+    description: >
+      The Docker image to use for the job.    
 
 steps:
   - checkout
+  - when:
+      condition: << parameters.is-custom-image >>
+      executor: custom
+  - when:
+      condition:
+        not: << parameters.is-custom-image >>
+      executor: default    
   - when:
       condition:
         not:
