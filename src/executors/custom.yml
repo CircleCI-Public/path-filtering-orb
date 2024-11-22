@@ -1,0 +1,38 @@
+description: >
+  Executor that uses a custom Docker image if specified, with optional authentication for private repositories.
+
+docker:
+  - image: <<parameters.image>>:<<parameters.tag>>
+    auth:
+      username: <<parameters.docker-username>>
+      password: <<parameters.docker-password>>
+
+
+parameters:
+  # Default tag for Python image
+  tag:
+    type: string
+    default: "3.8"
+    description: "The Python version tag to use when using the default image."
+
+  is-custom-image:
+    type: boolean
+    default: false
+    description: "Whether to use a custom Docker image."
+
+  # Custom image name (used only if 'use-custom-image' is true)
+  image:
+    type: string
+    default: "docker-hub-remote.dr-uw2.adobeitc.com/cimg/python"
+    description: "Specify the name of the custom Docker image to use if 'use-custom-image' is true."
+
+  # Docker credentials for private repository access
+  docker-username:
+    type: string
+    default: ""
+    description: "Username for private Docker registry authentication."
+
+  docker-password:
+    type: string
+    default: ""
+    description: "Password for private Docker registry authentication."
