@@ -59,6 +59,12 @@ parameters:
     description: >
       Pick a specific cimg/python image variant:
       https://hub.docker.com/r/cimg/python/tags
+  circleci_ip_ranges:
+    description: Enables jobs to go through a set of well-defined IP address ranges.
+    type: boolean
+    default: false
+    
+circleci_ip_ranges: << parameters.circleci_ip_ranges >>
 
 steps:
   - checkout
