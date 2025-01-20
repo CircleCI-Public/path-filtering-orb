@@ -1,5 +1,5 @@
 # Path Filtering Orb
-[![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/path-filtering-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/affinity/path-filtering-orb) [![CircleCI Orb Version](https://badges.circleci.com/orbs/affinity/path-filtering.svg)](https://circleci.com/developer/orbs/orb/affinity/path-filtering) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/affinity/path-filtering-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
+[![CircleCI Orb Version](https://badges.circleci.com/orbs/affinity/path-filtering-orb.svg)](https://circleci.com/developer/orbs/orb/affinity/path-filtering-orb) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/affinity/path-filtering-orb/master/LICENSE)
 
 Additional READMEs are available in each directory.
 
@@ -11,13 +11,13 @@ Additional READMEs are available in each directory.
 
 [Setup Workflows Documentation](https://github.com/CircleCI-Public/api-preview-docs/blob/master/docs/setup-workflows.md#concepts) - Doc explaining a special type of workflow used in dynamic config
 
-[CircleCI Orb Registry Page](https://circleci.com/developer/orbs/orb/circleci/path-filtering) - The official registry page of this orb for all versions, executors, commands, and jobs described.
+[CircleCI Orb Registry Page](https://circleci.com/developer/orbs/orb/affinity/path-filtering-orb) - The official registry page of this orb for all versions, executors, commands, and jobs described.
 
 [CircleCI Orb Docs](https://circleci.com/docs/2.0/orb-intro/#section=configuration) - Docs for using, creating, and publishing CircleCI Orbs.
 
 ### How to Contribute
 
-We welcome [issues](https://github.com/CircleCI-Public/path-filtering-orb/issues) to and [pull requests](https://github.com/CircleCI-Public/path-filtering-orb/pulls) against this repository!
+We welcome [issues](https://github.com/affinity/path-filtering-orb/issues) to and [pull requests](https://github.com/affinity/path-filtering-orb/pulls) against this repository!
 
 ### Development
 
