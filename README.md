@@ -1,7 +1,5 @@
 # Path Filtering Orb
-[![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/path-filtering-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/CircleCI-Public/path-filtering-orb) [![CircleCI Orb Version](https://badges.circleci.com/orbs/circleci/path-filtering.svg)](https://circleci.com/developer/orbs/orb/circleci/path-filtering) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/circleci-public/path-filtering-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
-
-A starter template for orb projects. Build, test, and publish orbs automatically on CircleCI with [Orb-Tools](https://circleci.com/orbs/registry/orb/circleci/orb-tools).
+[![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/path-filtering-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/affinity/path-filtering-orb) [![CircleCI Orb Version](https://badges.circleci.com/orbs/affinity/path-filtering.svg)](https://circleci.com/developer/orbs/orb/affinity/path-filtering) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/affinity/path-filtering-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
 Additional READMEs are available in each directory.
 
@@ -21,7 +19,26 @@ Additional READMEs are available in each directory.
 
 We welcome [issues](https://github.com/CircleCI-Public/path-filtering-orb/issues) to and [pull requests](https://github.com/CircleCI-Public/path-filtering-orb/pulls) against this repository!
 
-### How to Publish An Update
+### Development
+
+To develop this orb, you can use the `circleci orb pack src > /tmp/orb.yml` command to generate and validate the orb.yml file.
+Publish a dev version with:
+```shell
+circleci orb publish /tmp/orb.yml affinity/path-filtering@dev:first
+```
+
+Test it out in your CircleCI workflow by adding the following to your `.circleci/config.yml`:
+```yaml
+orbs:
+  path-filtering: affinity/path-filtering@dev:first
+```
+
+Publish it for use with:
+```shell
+  circleci orb publish /tmp/orb.yml affinity/path-filtering@<version tag created below>
+```
+
+### How to Publish An New Release
 1. Merge pull requests with desired changes to the main branch.
     - For the best experience, squash-and-merge and use [Conventional Commit Messages](https://conventionalcommits.org/).
 2. Find the current version of the orb.
@@ -34,4 +51,3 @@ We welcome [issues](https://github.com/CircleCI-Public/path-filtering-orb/issues
     - If you have used _[Conventional Commit Messages](https://conventionalcommits.org/)_ it will be easy to determine what types of changes were made, allowing you to ensure the correct version tag is being published.
 5. Now ensure the version tag selected is semantically accurate based on the changes included.
 6. Click _"Publish Release"_.
-    - This will push a new tag and trigger your publishing pipeline on CircleCI.
