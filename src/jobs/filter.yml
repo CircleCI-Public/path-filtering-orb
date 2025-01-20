@@ -63,11 +63,34 @@ parameters:
     description: Enables jobs to go through a set of well-defined IP address ranges.
     type: boolean
     default: false
+  enable_shallow_checkout:
+    type: boolean
+    description: "Flag value for whether shallow checkout is used or not"
+    default: false
+  checkout_shallow_depth:
+    type: integer
+    description: "shallow checkout depth"
+    default: 100
+  checkout_shallow_fetch_depth:
+    type: integer
+    description: "shallow checkout fetch depth"
+    default: 100
 
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>
 
 steps:
-  - checkout
+  - when:
+      condition:
+        equal: [ false, << parameters.enable_shallow_checkout >> ]
+      steps:
+        - checkout
+  - when:
+      condition:
+        equal: [ true, << parameters.enable_shallow_checkout >> ]
+      steps:
+        - git-shallow-clone/checkout:
+            depth: << parameters.checkout_shallow_depth >>
+            fetch_depth: << parameters.checkout_shallow_fetch_depth >>
   - when:
       condition:
         not:
