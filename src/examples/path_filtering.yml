@@ -5,12 +5,16 @@ usage:
   version: 2.1
   setup: true
   orbs:
-    path-filtering: circleci/path-filtering@0.1.7
+    path-filtering: affinity/path-filtering@0.9.1
   workflows:
     generate-config:
       jobs:
         - path-filtering/filter:
             base-revision: main
+            # use shallow clones to speed up the process
+            enable_shallow_checkout: true
+            checkout_shallow_depth: 200
+            checkout_shallow_fetch_depth: 200
             config-path: .circleci/continue_config.yml
             mapping: |
               src/.* build-code true
