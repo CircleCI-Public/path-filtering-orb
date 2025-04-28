@@ -7,7 +7,7 @@ docker:
 parameters:
   tag:
     type: string
-    default: "3.8"
+    default: "3.9"
     description: >
       Pick a specific cimg/python image variant:
       https://hub.docker.com/r/cimg/python/tags
