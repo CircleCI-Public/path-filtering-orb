@@ -77,7 +77,7 @@ parameters:
     default: 100
   enable_merge_queue_support:
     type: boolean
-    description: "Set to true if you use Github merge queue"
+    description: "Set to true if you use Github merge queue. Requires a context with a CIRCLECI_ACCESS_TOKEN set for API access"
     default: false
 
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>

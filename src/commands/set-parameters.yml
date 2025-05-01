@@ -30,7 +30,7 @@ parameters:
       will be ignored if the user passes the config file per mapping in the mapping parameter
   enable_merge_queue_support:
     type: boolean
-    description: "Set to true if you use Github merge queue"
+    description: "Set to true if you use Github merge queue. Requires a context with a CIRCLECI_ACCESS_TOKEN set for API access"
     default: false
 
 steps:
