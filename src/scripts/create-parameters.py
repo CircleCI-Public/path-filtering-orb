@@ -109,7 +109,6 @@ def parent_commit(merge_queue_support):
     )
 
     try:
-      # Make the request and get the response
       with urllib.request.urlopen(req) as response:
         data = response.read().decode(response.headers.get_content_charset("utf-8"))
     except urllib.error.HTTPError as e:
@@ -118,7 +117,9 @@ def parent_commit(merge_queue_support):
       raise Exception(f"URL Error: {e.reason}")
 
     previous_sha = extract_vcs_revision(data)
-    print (f"Previous SHA: {previous_sha}")
+    if previous_sha is None:
+      raise Exception("Could not find a previous build to use as base.")
+
     return previous_sha
 
   else:
