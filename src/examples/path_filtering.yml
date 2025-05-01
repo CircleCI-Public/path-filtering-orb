@@ -15,6 +15,9 @@ usage:
             enable_shallow_checkout: true
             checkout_shallow_depth: 200
             checkout_shallow_fetch_depth: 200
+            # This repo uses Github's merge queue; this will enable support for it
+            # to find the proper merge base when multiple commits are merged in one push
+            enable_merge_queue_support: true
             config-path: .circleci/continue_config.yml
             mapping: |
               src/.* build-code true
