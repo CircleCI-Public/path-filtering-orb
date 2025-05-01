@@ -28,6 +28,10 @@ parameters:
     description: >
       The location of the config to continue the pipeline with, please note that this parameter
       will be ignored if the user passes the config file per mapping in the mapping parameter
+  enable_merge_queue_support:
+    type: boolean
+    description: "Set to true if you use Github merge queue"
+    default: false
 
 steps:
   - run:
@@ -38,4 +42,5 @@ steps:
         OUTPUT_PATH: << parameters.output-path >>
         CONFIG_PATH: << parameters.config-path >>
         CREATE_PIPELINE_SCRIPT: <<include(scripts/create-parameters.py)>>
+        MERGE_QUEUE_SUPPORT: << parameters.enable_merge_queue_support >>
       command: <<include(scripts/create-parameters.sh)>>
