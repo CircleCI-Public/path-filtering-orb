@@ -101,7 +101,7 @@ def parent_commit(merge_queue_support):
   if merge_queue_support and (branch == 'master' or branch == 'main'):
     print(f"Merge Queue support is enabled, using CircleCI API to get the previously built commit on {branch}")
     # make a request to CircleCI API to get the latest build for the branch, we'll use that as our base
-    url = f'https://circleci.com/api/v1.1/project/github/{org_name}/{repo_name}/tree/{branch}?limit=1'
+    url = f'https://circleci.com/api/v1.1/project/github/{org_name}/{repo_name}/tree/{branch}?filter=successful&limit=1'
 
     req = urllib.request.Request(
       url,
