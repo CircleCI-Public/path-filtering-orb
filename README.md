@@ -38,7 +38,7 @@ Publish it for use with:
   circleci orb publish /tmp/orb.yml affinity/path-filtering@<version tag created below>
 ```
 
-### How to Publish An New Release
+### How to Publish A New Release
 1. Merge pull requests with desired changes to the main branch.
     - For the best experience, squash-and-merge and use [Conventional Commit Messages](https://conventionalcommits.org/).
 2. Find the current version of the orb.
