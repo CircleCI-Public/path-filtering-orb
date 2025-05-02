@@ -30,6 +30,7 @@ parameters:
       will be ignored if the user passes the config file per mapping in the mapping parameter
 
 steps:
+  - jq/install
   - run:
       name: Set parameters
       environment:
@@ -37,5 +38,4 @@ steps:
         MAPPING: << parameters.mapping >>
         OUTPUT_PATH: << parameters.output-path >>
         CONFIG_PATH: << parameters.config-path >>
-        CREATE_PIPELINE_SCRIPT: <<include(scripts/create-parameters.py)>>
       command: <<include(scripts/create-parameters.sh)>>
