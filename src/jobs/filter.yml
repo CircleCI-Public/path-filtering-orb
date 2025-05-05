@@ -63,11 +63,19 @@ parameters:
     description: Enables jobs to go through a set of well-defined IP address ranges.
     type: boolean
     default: false
+  checkout:
+    type: boolean
+    description: "Whether to run an optional checkout step before continuing"
+    default: true
 
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>
 
 steps:
-  - checkout
+  - when:
+      condition:
+        equal: [ true, << parameters.checkout >> ]
+      steps:
+        - checkout
   - when:
       condition:
         not:
