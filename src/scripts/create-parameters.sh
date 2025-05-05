@@ -28,7 +28,12 @@ function write_mappings() {
         local first=true
         for i in "$@"; do
             key="${i%% *}" 
-            value=$(printf '%s' "${i#* }" | jq .)
+            raw_value="${i#* }"
+            if ! echo "$raw_value" | jq -e . >/dev/null 2>&1; then
+                value=$(printf '%s' "$raw_value" | jq -R .)
+            else
+                value="$raw_value"
+            fi
             if [ "$first" = true ]; then
                 first=false
             else
@@ -100,24 +105,17 @@ while IFS= read -r line; do
             echo "Cannot parse pipeline value $PARAM_VALUE from mapping"
             exit 2
         fi
-        type=$(echo "$PARAM_VALUE" | jq -r 'type')
-        if [[ "$type" == "string" || "$type" == "number" || "$type" == "boolean" ]]; then
-            regex="^$MAPPING_PATH\$"
-            for i in $FILES_CHANGED; do
-                if [[ "$i" =~ $regex ]]; then
-                    filtered_mapping+=("$PARAM_NAME $PARAM_VALUE")
+        regex="^$MAPPING_PATH\$"
+        for i in $FILES_CHANGED; do
+            if [[ "$i" =~ $regex ]]; then
+                filtered_mapping+=("$PARAM_NAME $PARAM_VALUE")
 
-                    if [[ -n "$CONFIG_FILE" ]] && ! already_in_list "$CONFIG_FILE" "${filtered_files_set[@]}"; then
-                        filtered_files_set+=("$CONFIG_FILE")
-                    fi
-                    break
+                if [[ -n "$CONFIG_FILE" ]] && ! already_in_list "$CONFIG_FILE" "${filtered_files_set[@]}"; then
+                    filtered_files_set+=("$CONFIG_FILE")
                 fi
-            done
-        else
-            echo "Pipeline parameters can only be integer, string or boolean type."
-            echo "Found $PARAM_VALUE of type $type"
-            exit 3
-        fi
+                break
+            fi
+        done
     fi
 done <<< "$MAPPING"
 

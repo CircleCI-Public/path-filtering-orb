@@ -29,7 +29,7 @@ parameters:
     description: >
       Mapping of path regular expressions to pipeline parameters and
       values. If the value is a file, then it will be loaded from the disk.
-      One mapping per line, whitespace-delimited. String values must be double-quoted.
+      One mapping per line, whitespace-delimited.
   config-path:
     type: string
     default: ".circleci/continue_config.yml"
