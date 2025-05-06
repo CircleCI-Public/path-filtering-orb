@@ -32,6 +32,9 @@ usage:
             mapping: .circleci/mapping.conf
         - path-filtering/filter:
             base-revision: main
+            exclude: |
+              src/config.yml
+              build/target/.*
             config-path: .circleci/continue_config.yml
             # There are four ways to pass a mapping line
             # Only path

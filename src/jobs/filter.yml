@@ -67,6 +67,11 @@ parameters:
     type: boolean
     description: "Whether to run an optional checkout step before continuing"
     default: true
+  exclude:
+    type: string
+    default: ""
+    description: >
+      List of paths to exclude from the mapping. One path per line.
 
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>
 
@@ -88,6 +93,7 @@ steps:
       mapping: << parameters.mapping >>
       output-path: << parameters.output-path >>
       config-path: << parameters.config-path >>
+      exclude: <<parameters.exclude>>
   - generate-config:
       config-list-path: /tmp/filtered-config-list
       generated-config-path: "/tmp/generated-config.yml"

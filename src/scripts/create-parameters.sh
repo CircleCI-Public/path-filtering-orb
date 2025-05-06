@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 MAPPING="$(echo "$MAPPING" | circleci env subst)"
+EXCLUDE="$(echo "$EXCLUDE" | circleci env subst)"
 OUTPUT_PATH="$(echo "$OUTPUT_PATH" | circleci env subst)"
 CONFIG_PATH="$(echo "$CONFIG_PATH" | circleci env subst)"
 BASE_REVISION="$(echo "$BASE_REVISION" | circleci env subst)"
@@ -81,6 +82,10 @@ if [ -f "$MAPPING" ]; then
     # In this case MAPPING is a file with the mappings
     MAPPING=$(cat "$MAPPING")
 fi
+if [ -f "$EXCLUDE" ]; then
+    # In this case EXCLUDE is a file with the exclusions
+    EXCLUDE=$(cat "$EXCLUDE")
+fi
 
 filtered_mapping=()
 filtered_files_set=()
@@ -105,10 +110,21 @@ while IFS= read -r line; do
             echo "Invalid mapping length of ${#tokens[@]}"
             exit 1
         fi
-        
         regex="^$MAPPING_PATH\$"
         for i in $FILES_CHANGED; do
+            PATH_EXCLUDED=0
             if [[ "$i" =~ $regex ]]; then
+                while IFS= read -r ex; do
+                    regex_exclude="^$ex\$"
+                    if [[ "$i" =~ $regex_exclude ]]; then
+                        PATH_EXCLUDED=1
+                        break
+                    fi
+                done <<< "$EXCLUDE"
+                if [ "$PATH_EXCLUDED" -eq 1 ]; then
+                    continue
+                fi
+
                 if [ -n "$PARAM_VALUE" ]; then
                     filtered_mapping+=("$PARAM_NAME $PARAM_VALUE")
                 fi
