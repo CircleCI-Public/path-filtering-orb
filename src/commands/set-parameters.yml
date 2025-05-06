@@ -16,6 +16,11 @@ parameters:
       Mapping of path regular expressions to pipeline parameters and
       values. One mapping per line, whitespace-delimited. If duplicate
       parameter keys are found, the last matching pattern will apply.
+  exclude:
+    type: string
+    default: ""
+    description: >
+      List of paths to exclude from the mapping. One path per line.
   output-path:
     type: string
     default: "/tmp/pipeline-parameters.json"
@@ -37,4 +42,5 @@ steps:
         MAPPING: << parameters.mapping >>
         OUTPUT_PATH: << parameters.output-path >>
         CONFIG_PATH: << parameters.config-path >>
+        EXCLUDE: <<parameters.exclude>>
       command: <<include(scripts/create-parameters.sh)>>

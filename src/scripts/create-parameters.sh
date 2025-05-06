@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 MAPPING="$(echo "$MAPPING" | circleci env subst)"
+EXCLUDE="$(echo "$EXCLUDE" | circleci env subst)"
 OUTPUT_PATH="$(echo "$OUTPUT_PATH" | circleci env subst)"
 CONFIG_PATH="$(echo "$CONFIG_PATH" | circleci env subst)"
 BASE_REVISION="$(echo "$BASE_REVISION" | circleci env subst)"
@@ -108,6 +109,12 @@ while IFS= read -r line; do
         
         regex="^$MAPPING_PATH\$"
         for i in $FILES_CHANGED; do
+            while IFS= read -r ex; do
+                regex_exclude="^$ex\$"
+                if [[ "$i" =~ $regex_exclude ]]; then
+                    continue
+                fi
+            done <<< "$EXCLUDE"
             if [[ "$i" =~ $regex ]]; then
                 if [ -n "$PARAM_VALUE" ]; then
                     filtered_mapping+=("$PARAM_NAME $PARAM_VALUE")
