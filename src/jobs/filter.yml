@@ -93,7 +93,7 @@ steps:
       mapping: << parameters.mapping >>
       output-path: << parameters.output-path >>
       config-path: << parameters.config-path >>
-      exclue: <<parameters.exclude>>
+      exclude: <<parameters.exclude>>
   - generate-config:
       config-list-path: /tmp/filtered-config-list
       generated-config-path: "/tmp/generated-config.yml"
