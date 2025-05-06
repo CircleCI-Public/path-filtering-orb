@@ -30,3 +30,16 @@ usage:
             base-revision: main
             config-path: .circleci/continue-config.yml
             mapping: .circleci/mapping.conf
+        - path-filtering/filter:
+            base-revision: main
+            config-path: .circleci/continue_config.yml
+            # There are four ways to pass a mapping line
+            # Only path
+            # Path and config file
+            # Path and parameters
+            # Path, parameters and config file
+            mapping: |
+              src/.*
+              doc/.* .circleci/build-docs-config.yml
+              tests/.* foo bar
+              build/.* foo bar .circleci/build.yml

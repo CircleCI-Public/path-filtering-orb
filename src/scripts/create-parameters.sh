@@ -87,12 +87,16 @@ filtered_files_set=()
 while IFS= read -r line; do
     if is_mapping_line "$line"; then
         read -ra tokens <<< "$line"
-        
-        if [ "${#tokens[@]}" -eq 3 ]; then
+        if [ "${#tokens[@]}" -eq 1 ]; then # <path>
+            MAPPING_PATH="${tokens[0]}"
+        elif [ "${#tokens[@]}" -eq 2 ]; then # <path> <config>
+            MAPPING_PATH="${tokens[0]}"
+            CONFIG_FILE="${tokens[1]}"
+        elif [ "${#tokens[@]}" -eq 3 ]; then # <path> <key_param> <value_param>
             MAPPING_PATH="${tokens[0]}"
             PARAM_NAME="${tokens[1]}"
             PARAM_VALUE="${tokens[2]}"
-        elif [ "${#tokens[@]}" -eq 4 ]; then
+        elif [ "${#tokens[@]}" -eq 4 ]; then # <path> <key_param> <value_param> <config>
             MAPPING_PATH="${tokens[0]}"
             PARAM_NAME="${tokens[1]}"
             PARAM_VALUE="${tokens[2]}"
@@ -101,15 +105,13 @@ while IFS= read -r line; do
             echo "Invalid mapping length of ${#tokens[@]}"
             exit 1
         fi
-        if ! PARAM_VALUE=$(echo "$PARAM_VALUE" | jq .); then
-            echo "Cannot parse pipeline value $PARAM_VALUE from mapping"
-            exit 2
-        fi
+        
         regex="^$MAPPING_PATH\$"
         for i in $FILES_CHANGED; do
             if [[ "$i" =~ $regex ]]; then
-                filtered_mapping+=("$PARAM_NAME $PARAM_VALUE")
-
+                if [ -n "$PARAM_VALUE" ]; then
+                    filtered_mapping+=("$PARAM_NAME $PARAM_VALUE")
+                fi
                 if [[ -n "$CONFIG_FILE" ]] && ! already_in_list "$CONFIG_FILE" "${filtered_files_set[@]}"; then
                     filtered_files_set+=("$CONFIG_FILE")
                 fi
@@ -119,7 +121,7 @@ while IFS= read -r line; do
     fi
 done <<< "$MAPPING"
 
-if [[ ${#filtered_mapping[@]} -eq 0 ]]; then
+if [[ ${#filtered_mapping[@]} -eq 0 && -n "$PARAM_VALUE" ]]; then
     echo "No change detected in the paths defined in the mapping parameter"
 fi
 
