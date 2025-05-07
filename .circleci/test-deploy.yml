@@ -1,13 +1,24 @@
 version: 2.1
 orbs:
   path-filtering: circleci/path-filtering@dev:<<pipeline.git.revision>>
-  orb-tools: circleci/orb-tools@11.5
+  orb-tools: circleci/orb-tools@11.6.1
 
 filters: &filters
   tags:
     only: /.+/
 
 jobs:
+  set-parameters-same-base:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - run: echo 'export BASE_REVISION=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
+      - path-filtering/set-parameters:
+          mapping: |
+            src/.* foo bar
+          base-revision: $BASE_REVISION
+      
   set-parameters-test:
     docker:
       - image: cimg/base:current
@@ -34,6 +45,8 @@ jobs:
 workflows:
   test-deploy:
     jobs:
+      - set-parameters-same-base:
+          filters: *filters
       - set-parameters-test:
           filters: *filters
       - orb-tools/pack:
