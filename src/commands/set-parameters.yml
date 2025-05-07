@@ -32,7 +32,13 @@ parameters:
     description: >
       The location of the config to continue the pipeline with, please note that this parameter
       will be ignored if the user passes the config file per mapping in the mapping parameter
-
+  same-base-run:
+    type: boolean
+    default: true
+    description: >
+      This is value is used to know what to do when the base revision is the same as the current commit.
+      When set to true, it will compare with the previous commit.
+      When set to false, it will act as if not changes were done.
 steps:
   - jq/install
   - run:
@@ -43,4 +49,5 @@ steps:
         OUTPUT_PATH: << parameters.output-path >>
         CONFIG_PATH: << parameters.config-path >>
         EXCLUDE: <<parameters.exclude>>
+        SAME_BASE_RUN: <<parameters.same-base-run>>
       command: <<include(scripts/create-parameters.sh)>>
