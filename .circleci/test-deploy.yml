@@ -50,8 +50,8 @@ workflows:
     jobs:
       - set-parameters-same-base:
           matrix:
+            alias: set-parameters-same-base
             parameters:
-              alias: set-parameters-same-base
               same-base-run: [true, false]
           filters: *filters
       - set-parameters-test:
