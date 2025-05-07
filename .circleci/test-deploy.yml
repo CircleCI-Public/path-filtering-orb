@@ -9,6 +9,9 @@ filters: &filters
 
 jobs:
   set-parameters-same-base:
+    parameters:
+      same-base-run:
+        type: boolean
     docker:
       - image: cimg/base:current
     steps:
@@ -18,7 +21,7 @@ jobs:
           mapping: |
             src/.* foo bar
           base-revision: $BASE_REVISION
-      
+          same-base-run: <<parameters.same-base-run>>
   set-parameters-test:
     docker:
       - image: cimg/base:current
@@ -46,6 +49,10 @@ workflows:
   test-deploy:
     jobs:
       - set-parameters-same-base:
+          matrix:
+            parameters:
+              alias: set-parameters-same-base
+              same-base-run: [true, false]
           filters: *filters
       - set-parameters-test:
           filters: *filters
@@ -58,6 +65,7 @@ workflows:
           requires:
             - orb-tools/pack
             - set-parameters-test
+            - set-parameters-same-base
           context: orb-publisher
           filters:
             branches:
