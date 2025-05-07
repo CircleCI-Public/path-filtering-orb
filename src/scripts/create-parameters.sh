@@ -66,7 +66,7 @@ function already_in_list() {
 }
 
 if [[ "$MERGE_BASE" == "$CIRCLE_SHA1" ]]; then
-    if [ "$SAME_BASE_RUN" == "1" ]; then
+    if [ "$SAME_BASE_RUN" == "0" ]; then
         echo "Already in the base revision, exiting"
         echo "{}" > "$OUTPUT_PATH"
         : > "$filtered_config_list_file"
