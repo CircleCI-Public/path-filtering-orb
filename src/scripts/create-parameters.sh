@@ -4,6 +4,7 @@ EXCLUDE="$(echo "$EXCLUDE" | circleci env subst)"
 OUTPUT_PATH="$(echo "$OUTPUT_PATH" | circleci env subst)"
 CONFIG_PATH="$(echo "$CONFIG_PATH" | circleci env subst)"
 BASE_REVISION="$(echo "$BASE_REVISION" | circleci env subst)"
+SAME_BASE_RUN="$(echo "$SAME_BASE_RUN" | circleci env subst)"
 
 filtered_config_list_file="/tmp/filtered-config-list"
 git checkout "$BASE_REVISION"
@@ -65,6 +66,12 @@ function already_in_list() {
 }
 
 if [[ "$MERGE_BASE" == "$CIRCLE_SHA1" ]]; then
+    if [ "$SAME_BASE_RUN" == "0" ]; then
+        echo "Already in the base revision, exiting"
+        echo "{}" > "$OUTPUT_PATH"
+        : > "$filtered_config_list_file"
+        exit 0
+    fi
     if git rev-parse HEAD~1; then
         MERGE_BASE=$(git rev-parse HEAD~1)
     else

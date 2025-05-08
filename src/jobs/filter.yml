@@ -72,6 +72,13 @@ parameters:
     default: ""
     description: >
       List of paths to exclude from the mapping. One path per line.
+  same-base-run:
+    type: boolean
+    default: true
+    description: >
+      This is value is used to know what to do when the base revision is the same as the current commit.
+      When set to true, it will compare with the previous commit.
+      When set to false, it will act as if not changes were done.
 
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>
 
@@ -94,6 +101,7 @@ steps:
       output-path: << parameters.output-path >>
       config-path: << parameters.config-path >>
       exclude: <<parameters.exclude>>
+      same-base-run: <<parameters.same-base-run>>
   - generate-config:
       config-list-path: /tmp/filtered-config-list
       generated-config-path: "/tmp/generated-config.yml"
