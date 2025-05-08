@@ -10,9 +10,7 @@ description: >
   supplied value for the setup workflow continuation. This way the
   continuation config can be filtered to only perform relevant tasks.
 
-executor:
-  name: default
-  tag: << parameters.tag >>
+executor: <<parameters.executor>>
 
 resource_class: << parameters.resource_class >>
 
@@ -53,12 +51,10 @@ parameters:
     type: string
     description: "Resource class to use"
     default: "small"
-  tag:
-    type: string
-    default: "3.9"
-    description: >
-      Pick a specific cimg/python image variant:
-      https://hub.docker.com/r/cimg/python/tags
+  executor:
+    type: executor
+    description: "Executor where to run this job"
+    default: default
   circleci_ip_ranges:
     description: Enables jobs to go through a set of well-defined IP address ranges.
     type: boolean

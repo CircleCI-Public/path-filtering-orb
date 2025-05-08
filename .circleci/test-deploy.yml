@@ -48,6 +48,11 @@ jobs:
 workflows:
   test-deploy:
     jobs:
+      - path-filtering/filter:
+          base-revision: main
+          config-path: .circleci/continue_config.yml
+          mapping: |
+            src/.*
       - set-parameters-same-base:
           matrix:
             alias: set-parameters-same-base
