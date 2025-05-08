@@ -1,13 +1,50 @@
 version: 2.1
 
 setup: true
+
 orbs:
   orb-tools: circleci/orb-tools@11.6.1
   shellcheck: circleci/shellcheck@3.4
+  path-filtering: {}
 
 filters: &filters
   tags:
     only: /.+/
+
+jobs:
+  set-parameters-same-base:
+    parameters:
+      same-base-run:
+        type: boolean
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - run: echo 'export BASE_REVISION=$(git rev-parse --abbrev-ref HEAD)' >> $BASH_ENV
+      - path-filtering/set-parameters:
+          mapping: |
+            src/.* foo bar
+          base-revision: $BASE_REVISION
+          same-base-run: <<parameters.same-base-run>>
+  set-parameters-test:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - checkout
+      - path-filtering/set-parameters:
+          mapping: |
+            src/.* test-changes true
+            src/examples/.* string-example "value"
+      - path-filtering/set-parameters:
+          config-path: ".circleci/test-deploy.yml"
+          mapping: |
+            src/commands/.* test-commands true .circleci/config.yml
+            src/examples/.* test-examples true .circleci/test-deploy.yml
+            src/jobs/.* test-jobs true .circleci/config.yml
+            src/tests/.* test-tests true .circleci/test-deploy.yml
+      - path-filtering/generate-config:
+          config-list-path: /tmp/filtered-config-list
+          generated-config-path: "/tmp/generated-config.yml"
 
 workflows:
   lint-pack:
@@ -20,15 +57,58 @@ workflows:
           filters: *filters
       - shellcheck/check:
           filters: *filters
+      - path-filtering/filter:
+          requires:
+            - orb-tools/lint
+            - orb-tools/pack
+            - orb-tools/review
+            - shellcheck/check
+          base-revision: main
+          config-path: .circleci/continue_config.yml
+          mapping: |
+            src/.*
+      - set-parameters-same-base:
+          requires:
+            - orb-tools/lint
+            - orb-tools/pack
+            - orb-tools/review
+            - shellcheck/check
+          matrix:
+            alias: set-parameters-same-base
+            parameters:
+              same-base-run: [true, false]
+          filters: *filters
+      - set-parameters-test:
+          requires:
+            - orb-tools/lint
+            - orb-tools/pack
+            - orb-tools/review
+            - shellcheck/check
+          filters: *filters
       - orb-tools/publish:
           orb-name: circleci/path-filtering
           vcs-type: << pipeline.project.type >>
+          pub-type: production
           requires:
-            [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
+            - set-parameters-test
+            - set-parameters-same-base
+            - path-filtering/filter
           context: orb-publisher
-          filters: *filters
-      - orb-tools/continue:
-          pipeline-number: << pipeline.number >>
-          vcs-type: << pipeline.project.type >>
-          requires: [orb-tools/publish]
-          filters: *filters
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+      # - orb-tools/publish:
+      #     orb-name: circleci/path-filtering
+      #     vcs-type: << pipeline.project.type >>
+      #     requires:
+      #       [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
+      #     context: orb-publisher
+      #     filters: *filters
+      # - orb-tools/continue:
+      #     pipeline-number: << pipeline.number >>
+      #     vcs-type: << pipeline.project.type >>
+      #     requires: [orb-tools/publish]
+      #     filters: *filters
