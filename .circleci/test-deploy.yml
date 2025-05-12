@@ -13,14 +13,14 @@ executors:
       - image: cimg/base:stable
   macos:
     macos:
-      xcode: 15.2.0
+      xcode: 16.2.0
   arm:
     machine:
-      image: ubuntu-2004:current
+      image: ubuntu-2404:current
     resource_class: arm.medium
   linuxvm:
     machine:
-      image: ubuntu-2004:current    
+      image: ubuntu-2404:current    
 jobs:
   set-parameters-same-base:
     parameters:
