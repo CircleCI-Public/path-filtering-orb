@@ -7,6 +7,20 @@ filters: &filters
   tags:
     only: /.+/
 
+executors:
+  docker-base:
+    docker:
+      - image: cimg/base:stable
+  macos:
+    macos:
+      xcode: 16.2.0
+  arm:
+    machine:
+      image: ubuntu-2404:current
+    resource_class: arm.medium
+  linuxvm:
+    machine:
+      image: ubuntu-2404:current    
 jobs:
   set-parameters-same-base:
     parameters:
@@ -48,6 +62,34 @@ jobs:
 workflows:
   test-deploy:
     jobs:
+      - path-filtering/filter:
+          name: filter-macos
+          debug: true
+          base-revision: main
+          config-path: .circleci/config.yml
+          executor: macos
+          resource_class: macos.m1.medium.gen1
+          mapping: |
+            src/.* build-code true
+      - path-filtering/filter:
+          name: filter-arm
+          debug: true
+          base-revision: main
+          config-path: .circleci/config.yml
+          executor: arm
+          resource_class: arm.medium
+          mapping: |
+            src/.* build-code true
+      - path-filtering/filter:
+          debug: true
+          base-revision: main
+          config-path: .circleci/config.yml
+          mapping: |
+            src/.* build-code true
+          matrix:
+            alias: filter
+            parameters:
+              executor: [path-filtering/default, docker-base, linuxvm]
       - set-parameters-same-base:
           matrix:
             alias: set-parameters-same-base
@@ -64,6 +106,9 @@ workflows:
           pub-type: production
           requires:
             - orb-tools/pack
+            - filter
+            - filter-macos
+            - filter-arm
             - set-parameters-test
             - set-parameters-same-base
           context: orb-publisher
