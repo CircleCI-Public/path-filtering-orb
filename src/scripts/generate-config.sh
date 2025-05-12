@@ -22,10 +22,6 @@ function installYq() {
 
     wget "${RELEASE_URL}" -O /usr/local/bin/yq &&\
     chmod +x /usr/local/bin/yq
-    # curl -sL --retry 3 "${RELEASE_URL}" | tar zx
-
-    # echo "Installing to $DESTDIR"
-    # sudo install yq "$DESTDIR"
 
     command -v yq >/dev/null 2>&1
 
