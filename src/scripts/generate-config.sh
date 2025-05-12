@@ -12,7 +12,7 @@ function installYq() {
 
     uname -a | grep Darwin > /dev/null 2>&1 && OS='darwin' || OS='linux'
     PLATFORM=$(uname -m)
-    RELEASE_URL="${GITHUB_BASE_URL}/releases/download/v${VERSION}/yq_${OS}_${PLATFORM}.tar.gz"
+    RELEASE_URL="${GITHUB_BASE_URL}/releases/download/v${VERSION}/yq_${OS}_${PLATFORM}"
 
     # save the current checkout dir
     CHECKOUT_DIR=$(pwd)
@@ -20,10 +20,12 @@ function installYq() {
     SCRATCH=$(mktemp -d || mktemp -d -t 'tmp')
     cd "$SCRATCH" || exit
 
-    curl -sL --retry 3 "${RELEASE_URL}" | tar zx
+    wget "${RELEASE_URL}" -O /usr/local/bin/yq &&\
+    chmod +x /usr/local/bin/yq
+    # curl -sL --retry 3 "${RELEASE_URL}" | tar zx
 
-    echo "Installing to $DESTDIR"
-    sudo install yq "$DESTDIR"
+    # echo "Installing to $DESTDIR"
+    # sudo install yq "$DESTDIR"
 
     command -v yq >/dev/null 2>&1
 
