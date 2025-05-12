@@ -71,7 +71,7 @@ workflows:
           matrix:
             alias: filter
             parameters:
-              executor: [default, docker-base, arm, macos, linuxvm]
+              executor: [path-filtering/default, docker-base, arm, macos, linuxvm]
       - set-parameters-same-base:
           matrix:
             alias: set-parameters-same-base
