@@ -75,6 +75,12 @@ parameters:
       This is value is used to know what to do when the base revision is the same as the current commit.
       When set to true, it will compare with the previous commit.
       When set to false, it will act as if not changes were done.
+  debug:
+    type: boolean
+    default: false
+    description: >
+      This mode is use for testing purposes. Defaults to False
+      When this is set to True, the parameters and the config will be generated, but the continuation won't be called.
 
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>
 
@@ -101,7 +107,12 @@ steps:
   - generate-config:
       config-list-path: /tmp/filtered-config-list
       generated-config-path: "/tmp/generated-config.yml"
-  - continuation/continue:
-      configuration_path: "/tmp/generated-config.yml"
-      parameters: << parameters.output-path >>
-      circleci_domain: << parameters.circleci_domain >>
+
+  - when:
+      condition:
+        equal: [ true, <<parameters.debug>> ]
+      steps:
+        - continuation/continue:
+            configuration_path: "/tmp/generated-config.yml"
+            parameters: << parameters.output-path >>
+            circleci_domain: << parameters.circleci_domain >>
