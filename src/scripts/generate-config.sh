@@ -11,8 +11,8 @@ function installYq() {
     echo "Installing yq v${VERSION}"
 
     uname -a | grep Darwin > /dev/null 2>&1 && OS='darwin' || OS='linux'
-
-    RELEASE_URL="${GITHUB_BASE_URL}/releases/download/v${VERSION}/yq_${OS}_amd64.tar.gz"
+    PLATFORM=$(uname -m)
+    RELEASE_URL="${GITHUB_BASE_URL}/releases/download/v${VERSION}/yq_${OS}_${PLATFORM}.tar.gz"
 
     # save the current checkout dir
     CHECKOUT_DIR=$(pwd)
