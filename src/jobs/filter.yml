@@ -110,7 +110,7 @@ steps:
 
   - when:
       condition:
-        equal: [ true, <<parameters.debug>> ]
+        equal: [ false, <<parameters.debug>> ]
       steps:
         - continuation/continue:
             configuration_path: "/tmp/generated-config.yml"
