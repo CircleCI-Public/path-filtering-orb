@@ -51,7 +51,7 @@ workflows:
       - path-filtering/filter:
           debug: true
           base-revision: main
-          config-path: .circleci/continue_config.yml
+          config-path: .circleci/config.yml
           mapping: |
             src/.* build-code true
       - set-parameters-same-base:
