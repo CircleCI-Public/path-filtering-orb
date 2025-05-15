@@ -7,6 +7,7 @@ BASE_REVISION="$(echo "$BASE_REVISION" | circleci env subst)"
 SAME_BASE_RUN="$(echo "$SAME_BASE_RUN" | circleci env subst)"
 
 filtered_config_list_file="/tmp/filtered-config-list"
+files_changed_file="/tmp/files-changed-list"
 git checkout "$BASE_REVISION"
 git checkout "$CIRCLE_SHA1"
 MERGE_BASE=$(git merge-base "$BASE_REVISION" "$CIRCLE_SHA1")
@@ -83,7 +84,7 @@ fi
 echo "Comparing $MERGE_BASE...$CIRCLE_SHA1"
 FILES_CHANGED=$(git -c core.quotepath=false diff --name-only "$MERGE_BASE" "$CIRCLE_SHA1")
 
-echo "$FILES_CHANGED"
+echo "$FILES_CHANGED" > $files_changed_file
 
 if [ -f "$MAPPING" ]; then
     # In this case MAPPING is a file with the mappings

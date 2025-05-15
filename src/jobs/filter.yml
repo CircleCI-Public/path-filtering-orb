@@ -81,7 +81,13 @@ parameters:
     description: >
       This mode is use for testing purposes. Defaults to False
       When this is set to True, the parameters and the config will be generated, but the continuation won't be called.
-
+  parameter_for_files_changed:
+    type: string
+    default: ""
+    description: >
+      If you want to get the list of files changed in the dynamic config, this value is the name of the parameter containing those files in there.
+      Defaults to empty string.
+      Set to empty string if you don't want the parameter.
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>
 
 steps:
@@ -114,5 +120,7 @@ steps:
       steps:
         - continuation/continue:
             configuration_path: "/tmp/generated-config.yml"
+            files_changed: /tmp/files-changed-list
+            parameter_for_files_changed: <<parameters.parameter_for_files_changed>>
             parameters: << parameters.output-path >>
             circleci_domain: << parameters.circleci_domain >>
