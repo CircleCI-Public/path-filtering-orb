@@ -1,13 +1,13 @@
 description: >
-  This is a sample executor using Docker and Python.
+  This is a sample executor using Docker
 
 docker:
-  - image: 'cimg/python:<<parameters.tag>>'
+  - image: 'cimg/base:<<parameters.tag>>'
 
 parameters:
   tag:
     type: string
-    default: "3.12"
+    default: "current"
     description: >
-      Pick a specific cimg/python image variant:
-      https://hub.docker.com/r/cimg/python/tags
+      Pick a specific cimg/base image variant:
+      https://hub.docker.com/r/cimg/base/tags
