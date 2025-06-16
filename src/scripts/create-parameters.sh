@@ -33,7 +33,7 @@ function write_mappings() {
             key="${i%% *}" 
             raw_value="${i#* }"
             if ! echo "$raw_value" | jq -e . >/dev/null 2>&1; then
-                value=$(printf '%s' "$raw_value" | jq -R .)
+                value=$(printf '%s' "$raw_value" | jq -R 'fromjson? // .')
             else
                 value="$raw_value"
             fi
