@@ -25,7 +25,7 @@ parameters:
     type: string
     default: ""
     description: >
-      Mapping of path regular expressions to pipeline parameters and
+      Mapping of path regular expressions (grep -P) to pipeline parameters and
       values. If the value is a file, then it will be loaded from the disk.
       One mapping per line, whitespace-delimited.
   config-path:

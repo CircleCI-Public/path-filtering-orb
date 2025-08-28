@@ -121,10 +121,10 @@ while IFS= read -r line; do
         regex="^$MAPPING_PATH\$"
         for i in $FILES_CHANGED; do
             PATH_EXCLUDED=0
-            if [[ "$i" =~ $regex ]]; then
+            if echo "$i" | grep -P "$regex" >/dev/null 2>&1; then
                 while IFS= read -r ex; do
                     regex_exclude="^$ex\$"
-                    if [[ "$i" =~ $regex_exclude ]]; then
+                    if echo "$i" | grep -P "$regex_exclude" >/dev/null 2>&1; then
                         PATH_EXCLUDED=1
                         break
                     fi
