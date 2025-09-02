@@ -6,6 +6,11 @@ CONFIG_PATH="$(echo "$CONFIG_PATH" | circleci env subst)"
 BASE_REVISION="$(echo "$BASE_REVISION" | circleci env subst)"
 SAME_BASE_RUN="$(echo "$SAME_BASE_RUN" | circleci env subst)"
 
+declare MAPPING_PATH
+declare CONFIG_FILE
+declare PARAM_NAME
+declare PARAM_VALUE
+
 filtered_config_list_file="/tmp/filtered-config-list"
 files_changed_file="/tmp/files-changed-list"
 git checkout "$BASE_REVISION"
