@@ -102,7 +102,7 @@ steps:
         equal: [ true, << parameters.checkout >> ]
       steps:
         - checkout:
-            method: <<parameters.checkout_method>>>
+            method: <<parameters.checkout_method>>
   - when:
       condition:
         not:
