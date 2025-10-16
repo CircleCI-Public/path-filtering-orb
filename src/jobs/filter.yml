@@ -88,6 +88,12 @@ parameters:
       If you want to get the list of files changed in the dynamic config, this value is the name of the parameter containing those files in there.
       Defaults to empty string.
       Set to empty string if you don't want the parameter.
+  checkout_method:
+    type: enum
+    default: blobless
+    enum: [full, blobless]
+    description: Type of checkout to use. Supported are full and blobless. Default to blobless
+    
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>
 
 steps:
@@ -95,7 +101,8 @@ steps:
       condition:
         equal: [ true, << parameters.checkout >> ]
       steps:
-        - checkout
+        - checkout:
+            method: <<parameters.checkout_method>>>
   - when:
       condition:
         not:
