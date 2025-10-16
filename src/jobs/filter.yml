@@ -90,8 +90,8 @@ parameters:
       Set to empty string if you don't want the parameter.
   checkout_method:
     type: enum
-    default: blobless
-    enum: [full, blobless]
+    default: "blobless"
+    enum: ["full", "blobless"]
     description: Type of checkout to use. Supported are full and blobless. Default to blobless.
 
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>
