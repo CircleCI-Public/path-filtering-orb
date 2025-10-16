@@ -92,8 +92,8 @@ parameters:
     type: enum
     default: blobless
     enum: [full, blobless]
-    description: Type of checkout to use. Supported are full and blobless. Default to blobless
-    
+    description: Type of checkout to use. Supported are full and blobless. Default to blobless.
+
 circleci_ip_ranges: << parameters.circleci_ip_ranges >>
 
 steps:
