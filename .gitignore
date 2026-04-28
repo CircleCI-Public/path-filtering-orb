@@ -2,3 +2,5 @@
 orb.yml
 
 .idea
+src/scripts/__pycache__/
+.claude/settings.local.json
