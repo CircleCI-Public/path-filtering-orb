@@ -187,7 +187,10 @@ def write_parameters_from_mappings(mappings, changes, output_path, config_path):
         Found {} of type {}
         """.format(decoded_param_value, type(decoded_param_value)))
 
-    regex = re.compile(r'^' + path + r'$')
+    # Wrap in a non-capturing group so user patterns containing top-level
+    # `|` (e.g. `src/.*|docs/.*`) stay anchored. Without the group,
+    # `^src/.*|docs/.*$` is parsed as `^src/.*` OR `docs/.*$`.
+    regex = re.compile(r'^(?:' + path + r')$')
     for change in changes:
       if regex.match(change):
         filtered_mapping.append([param, decoded_param_value])
@@ -224,12 +227,16 @@ def create_parameters(output_path, config_path, head, base, mapping, merge_queue
       # first parent, i.e. the last state of this branch before the
       # merge, and use that as the base.
       base = parent_commit(merge_queue_support)
-    except:
-      # This can fail if this is the first commit of the repo, so that
-      # HEAD~1 actually doesn't resolve. In this case we can compare
-      # against this magic SHA below, which is the empty tree. The diff
-      # to that is just the first commit as patch.
+    except subprocess.CalledProcessError:
+      # `git rev-parse HEAD~1` failed: this is the first commit of the
+      # repo, so HEAD~1 doesn't resolve. Compare against the empty-tree
+      # SHA so the diff is the first commit as a patch.
       base = '4b825dc642cb6eb9a060e54bf8d69288fbee4904'
+    # NOTE: API/network errors from parent_commit() are intentionally NOT
+    # caught here. Falling back to the empty tree on a transient failure
+    # would mark every file as changed and trigger every downstream
+    # workflow. Better to fail the filter job loudly than to silently
+    # rebuild the world.
 
   print('Comparing {}...{}'.format(base, head))
   changes = changed_files(base, head)
