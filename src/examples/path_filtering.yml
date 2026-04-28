@@ -5,7 +5,7 @@ usage:
   version: 2.1
   setup: true
   orbs:
-    path-filtering: affinity/path-filtering@0.9.3
+    path-filtering: affinity/path-filtering-orb@0.9.4
   workflows:
     generate-config:
       jobs:

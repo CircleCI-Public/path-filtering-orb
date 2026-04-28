@@ -24,25 +24,25 @@ We welcome [issues](https://github.com/affinity/path-filtering-orb/issues) to an
 To develop this orb, you can use the `circleci orb pack src > /tmp/orb.yml` command to generate and validate the orb.yml file.
 Publish a dev version with:
 ```shell
-circleci orb publish /tmp/orb.yml affinity/path-filtering@dev:first
+circleci orb publish /tmp/orb.yml affinity/path-filtering-orb@dev:first
 ```
 
 Test it out in your CircleCI workflow by adding the following to your `.circleci/config.yml`:
 ```yaml
 orbs:
-  path-filtering: affinity/path-filtering@dev:first
+  path-filtering: affinity/path-filtering-orb@dev:first
 ```
 
 Publish it for use with:
 ```shell
-  circleci orb publish /tmp/orb.yml affinity/path-filtering@<version tag created below>
+  circleci orb publish /tmp/orb.yml affinity/path-filtering-orb@<version tag created below>
 ```
 
 ### How to Publish A New Release
 1. Merge pull requests with desired changes to the main branch.
     - For the best experience, squash-and-merge and use [Conventional Commit Messages](https://conventionalcommits.org/).
 2. Find the current version of the orb.
-    - You can run `circleci orb info circleci/path-filtering | grep "Latest"` to see the current version.
+    - You can run `circleci orb info affinity/path-filtering | grep "Latest"` to see the current version.
 3. Create a [new Release](https://github.com/CircleCI-Public/path-filtering-orb/releases/new) on GitHub.
     - Click "Choose a tag" and _create_ a new [semantically versioned](http://semver.org/) tag. (ex: v1.0.0)
       - We will have an opportunity to change this before we publish if needed after the next step.
